@@ -13,8 +13,7 @@ deserialize the data from the output buffers.
 The size of the input buffer is also required as input.
 
 All source code is available, and I hereby declare
-that, to the knowledge of the author, the code does not
-contain any secret backdoors.
+that no hidden backdoors have been added to the code.
 
 
 Petter Solnoer - 15/04/2020.
