@@ -1,3 +1,10 @@
+///////////////////////////////////////////
+// This implementation of SHA-256 was    //
+// placed in the public domain by:       //
+//                                       //
+// Petter Solnoer - 15/04/2020           //
+///////////////////////////////////////////
+
 #ifndef SHA_256_H
 #define SHA_256_H
 

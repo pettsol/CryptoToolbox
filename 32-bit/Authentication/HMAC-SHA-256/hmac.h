@@ -1,3 +1,11 @@
+///////////////////////////////////////
+// This implementation of HMAC with  //
+// SHA-256 was placed in the public  //
+// domain by:                        //
+//                                   // 
+// Petter Solnoer - 15/04/2020       //
+///////////////////////////////////////
+
 #ifndef HMAC_H
 #define HMAC_H
 

@@ -1,3 +1,12 @@
+//////////////////////////////////////
+// This implementation of a         //
+// hex encoder / decoder was        //
+// placed in the public domain by:  //
+//                                  //
+// Petter Solnoer - 15/04/2020      //
+//////////////////////////////////////
+
+
 #include "encoder.h"
 #include <iostream>
 #include <string>
@@ -18,16 +27,6 @@ void string2hexString(const unsigned char* input, char* output, int size)
 	}
 	output[i++] = '\0';
 }
-/*void string2hexString(const char* input, char* output, int size)
-{
-	int loop, i;
-	loop = 0;
-
-	while (loop != size )
-	{
-		int first = 
-	}
-}*/
 
 int hex_to_int(unsigned char c)
 {
@@ -64,14 +63,3 @@ void hex2stringString(const char* input, unsigned char* output, int size)
 		}
 	}
 }
-/*
-void hex2stringString(const char* input, char* output, int hexSize)
-{
-	for (int i = 0; i < hexSize; i += 2)
-	{
-		std::string part = "";
-		part += input[i];
-		part += input[i+1];
-		*output = std::stoul(part, nullptr, 16); output++;	
-	}
-}*/
