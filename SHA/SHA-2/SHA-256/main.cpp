@@ -1,3 +1,15 @@
+///////////////////////////////////////////
+// This implementation of SHA-256 was    //
+// placed in the public domain by:       //
+//                                       //
+// Petter Solnoer - 15/04/2020           //
+///////////////////////////////////////////
+
+
+
+
+
+
 #include "sha-256.h"
 #include "../../../HexEncoder/encoder.h"
 
