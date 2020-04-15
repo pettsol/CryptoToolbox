@@ -1,3 +1,10 @@
+///////////////////////////////////
+// This implementation was been  //
+// placed in the public domain by//
+//                               //
+// Petter Solnoer - 31/03/2020   //
+///////////////////////////////////
+
 #include <iostream>
 #include <fstream>
 #include "aes_cfb.h"
@@ -59,10 +66,12 @@ void cfb_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv)
 void aes_encrypt(cipher_state *cs, u32 keystream[])
 {
 	initial_round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[0]));
+	#ifndef ROUND_REDUCED
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[4]));
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[8]));
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[12]));
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[16]));
+	#endif
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[20]));
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[24]));
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[28]));
@@ -92,7 +101,7 @@ void partial_state_update(cipher_state *cs, u8 *ctxt, int size)
 			cs->reg3 = cs->reg4;
 			cs->reg4 = (*((u32*)ctxt));
 		}
-		else if (size = 8)
+		else if (size == 8)
 		{
 			cs->reg1 = cs->reg3;
 			cs->reg2 = cs->reg4;
@@ -264,7 +273,6 @@ void cfb_process_packet(cipher_state *cs, u8 *in, u8 *out, int size, int mode)
 			// Cast to operate on words
 			// Encrypt and update the state register
 			// with cipher feedback
-			char tmp[9];
 			
 			*w_ptr_out = (*w_ptr_in) ^ keystream[0]; w_ptr_in++; w_ptr_out++;
 			*w_ptr_out = (*w_ptr_in) ^ keystream[1]; w_ptr_in++; w_ptr_out++;
@@ -293,7 +301,7 @@ void cfb_process_packet(cipher_state *cs, u8 *in, u8 *out, int size, int mode)
 				u8 *byte_ptr_in = (u8*) w_ptr_in;
 				while (size > 0)
 				{
-					*byte_ptr_out = (*byte_ptr_in) ^ ( (u8)(keystream[k] >> 24 - (8*(l--))));
+					*byte_ptr_out = (*byte_ptr_in) ^ ( (u8)(keystream[k] >> (24 - (8*(l--)))));
 					size -= 1;
 				}
 			}

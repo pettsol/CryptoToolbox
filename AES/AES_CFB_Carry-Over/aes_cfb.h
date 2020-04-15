@@ -1,3 +1,10 @@
+///////////////////////////////////
+// This implementation was been  //
+// placed in the public domain by//
+//                               //
+// Petter Solnoer - 31/03/2020   //
+///////////////////////////////////
+
 #ifndef AES_CFB
 #define AES_CFB
 
@@ -9,7 +16,7 @@
 #define decrypt 1
 
 // Struct containing the shift register of previous ciphertexts
-// and the keyschedule of the cipher
+// and the round keys of the cipher
 struct cipher_state{
 	// Registers to hold previous ciphertext	
 	u32 reg1;
@@ -26,6 +33,12 @@ struct cipher_state{
 // and process packet.
 void cfb_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv);
 void cfb_process_packet(cipher_state *cs, u8 *in, u8 *out, int size, int mode);
+
+// the encryption mode of the cipher 
+// and the key expansion can be accessed
+// directly in order to verify the
+// implementation with official
+// test vectors.
 void aes_encrypt(cipher_state *cs, u32 keystream[]);
 void KeyExpansion(u8 key[], u32 key_schedule[]);
 
