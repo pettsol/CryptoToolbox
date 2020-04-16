@@ -1,7 +1,7 @@
 ///////////////////////////////////////
-// This implementation of HMAC with  //
-// SHA-256 was placed in the public  //
-// domain by:                        //
+// This implementation of HC-128     //
+// was placed in the public domain   //
+// by:                               //
 //                                   // 
 // Petter Solnoer - 16/04/2020       //
 ///////////////////////////////////////
