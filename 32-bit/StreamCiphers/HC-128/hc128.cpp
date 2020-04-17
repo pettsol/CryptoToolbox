@@ -7,7 +7,7 @@
 ///////////////////////////////////////
 
 #include "hc128.h"
-#include "../HexEncoder/encoder.h"
+#include "../../HexEncoder/encoder.h"
 
 #include <iostream>
 #include <cstring>
