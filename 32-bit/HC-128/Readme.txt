@@ -2,9 +2,9 @@
 
 This folder contain an implementation of the 
 HC-128 stream cipher. The stream cipher 
-documentation was submitted to eStream and is 
-currently part of the software-oriented stream 
-cipher portfolio.
+documentation was submitted to eStream by
+Hongjun Wu and is currently part of the 
+software-oriented stream cipher portfolio.
 
 The stream cipher requres a 128-bit key
 and a 128-bit initialization vector (IV) as
