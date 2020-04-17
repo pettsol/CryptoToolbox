@@ -11,7 +11,7 @@
 #include "sha-256-tables.h"
 
 void pad_message(u8 *message, u64 size);
-void process_message(u32 *message, u32 *digest, u64 size);
+void process_message(u32 *digest, u32 *message, u64 size);
 
 struct sha_256_state
 {

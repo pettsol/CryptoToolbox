@@ -29,24 +29,24 @@ int main()
 	std::string hexIv = "288FF65DC42B92F960C72E95FC63CA31";
 
 	u32 key[4];
-	hex2stringString(hexkey.data(), (u8*)key, 32);
+	hex2stringString((u8*)key, hexkey.data(), 32);
 
 	u32 iv[4];
-	hex2stringString(hexIv.data(), (u8*)iv, 32);
+	hex2stringString((u8*)iv, hexIv.data(), 32);
 
 	// This segment performs the encryption	
 	hc128_state e_cs;
 
 	hc128_initialize(&e_cs, key, iv);
 
-	hc128_process_packet(&e_cs, (u8*)pt.data(), ciphertext, pt.size());
+	hc128_process_packet(&e_cs, ciphertext, (u8*)pt.data(), pt.size());
 
 	// This segment performs the decryption
 	hc128_state d_cs;
 
 	hc128_initialize(&d_cs, key, iv);
 
-	hc128_process_packet(&d_cs, ciphertext, recovered, pt.size());
+	hc128_process_packet(&d_cs, recovered, ciphertext, pt.size());
 
 	// Print the recovered text:
 	std::string print_recovered((char*)recovered, pt.size());

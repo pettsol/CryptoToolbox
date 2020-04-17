@@ -32,7 +32,7 @@ struct cipher_state{
 // cipher initialization
 // and process packet.
 void cfb_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv);
-void cfb_process_packet(cipher_state *cs, u8 *in, u8 *out, int size, int mode);
+void cfb_process_packet(cipher_state *cs, u8 *out, u8 *in, int size, int mode);
 
 // the encryption mode of the cipher 
 // and the key expansion can be accessed

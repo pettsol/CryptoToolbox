@@ -65,7 +65,7 @@ static const u8 ipad = 0x36;
 static const u8 opad = 0x5c;
 
 void hmac_initialization(hmac_state *ctx, u8* key, int B);
-void tag_generation(hmac_state *ctx, u8 *message, u8* tag, u64 dataLength, int tagSize);
-int tag_validation(hmac_state *ctx, u8 *message, u8 tag[16], u64 dataLength, int tagSize);
+void tag_generation(hmac_state *ctx, u8* tag, u8 *message, u64 dataLength, int tagSize);
+int tag_validation(hmac_state *ctx, u8 tag[16], u8 *message, u64 dataLength, int tagSize);
 
 #endif

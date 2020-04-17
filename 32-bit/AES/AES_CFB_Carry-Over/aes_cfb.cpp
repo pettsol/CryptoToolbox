@@ -239,7 +239,7 @@ void partial_state_update(cipher_state *cs, u8 *ctxt, int size)
 
 }
 
-void cfb_process_packet(cipher_state *cs, u8 *in, u8 *out, int size, int mode)
+void cfb_process_packet(cipher_state *cs, u8 *out, u8 *in, int size, int mode)
 {
 	
 	u32 *w_ptr_in = (u32*)in;;

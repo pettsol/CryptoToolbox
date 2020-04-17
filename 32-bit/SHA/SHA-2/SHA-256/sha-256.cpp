@@ -45,7 +45,7 @@ void pad_message(u8 *message, u64 size)
 	*tmp = (u8)(bit_length);
 }
 
-void process_message(u32 *message, u32 *digest, u64 size)
+void process_message(u32 *digest, u32 *message, u64 size)
 {
 	int n = 0;
 	// Declare message to hold padded text

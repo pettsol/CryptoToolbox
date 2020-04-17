@@ -33,7 +33,7 @@ void hmac_initialization(hmac_state *ctx, u8* key, int B)
 
 	if (B > KEYLENGTH) {
 		u8 hashedKey[DIGESTSIZE];
-		process_message((u32*)key, (u32*)hashedKey, B);
+		process_message((u32*)hashedKey, (u32*)key, B);
 		std::memcpy(localKey, hashedKey, DIGESTSIZE);
 		B = DIGESTSIZE;
 	} else {
@@ -54,7 +54,7 @@ void hmac_initialization(hmac_state *ctx, u8* key, int B)
 	}
 }
 
-void tag_generation(hmac_state *ctx, u8 *message, u8* tag, u64 dataLength, int tagLength)
+void tag_generation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int tagLength)
 {
 	// The inner key is used in the first computation along with the message
 	u8 inner_computation[dataLength+KEYLENGTH];
@@ -63,7 +63,7 @@ void tag_generation(hmac_state *ctx, u8 *message, u8* tag, u64 dataLength, int t
 
 	// Compute the hash of the message and the inner key
 	u8 inner_hash[DIGESTSIZE];
-	process_message((u32*)inner_computation, (u32*)inner_hash, dataLength+KEYLENGTH);
+	process_message((u32*)inner_hash, (u32*)inner_computation, dataLength+KEYLENGTH);
 	
 	// The outer key is appended to the inner hash.
 	u8 outer_computation[DIGESTSIZE+KEYLENGTH] = {0};
@@ -72,18 +72,18 @@ void tag_generation(hmac_state *ctx, u8 *message, u8* tag, u64 dataLength, int t
 
 	// Computer the final hash
 	u8 outer_hash[DIGESTSIZE];
-	process_message((u32*)outer_computation, (u32*)outer_hash, DIGESTSIZE+KEYLENGTH);
+	process_message((u32*)outer_hash, (u32*)outer_computation, DIGESTSIZE+KEYLENGTH);
 	
 	// The final message authentication code is then found by
 	// taking the leftmost t bytes.
 	std::memcpy(tag, outer_hash, tagLength);
 }
 
-int tag_validation(hmac_state *ctx, u8 *message, u8* tag, u64 dataLength, int tagLength)
+int tag_validation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int tagLength)
 {
 	// Generate a tag from the received message
 	u8 newTag[tagLength];
-	tag_generation(ctx, message, newTag, dataLength, tagLength);
+	tag_generation(ctx, newTag, message, dataLength, tagLength);
 
 	// Compare the newly generated tag with the
 	// recevied tag.

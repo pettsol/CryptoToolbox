@@ -23,7 +23,7 @@ void hc128_initialize(hc128_state *cs, u32 key[4], u32 iv[4])
 	std::memcpy(&(W[8]), iv, 16); std::memcpy(&(W[12]), iv, 16);
 
 	char hexKey[33];
-	string2hexString((u8*)key, hexKey, 16);
+	string2hexString(hexKey, (u8*)key, 16);
 	std::string printKey(hexKey, 32);
 	std::cout << "Key: " << printKey << std::endl;
 
@@ -88,7 +88,7 @@ void hc128_generate_keystream(hc128_state *cs, u32 *keystream, u64 size)
 	}
 }
 
-void hc128_process_packet(hc128_state *cs, u8 *input, u8 *output, u64 size)
+void hc128_process_packet(hc128_state *cs, u8 *output, u8 *input, u64 size)
 {
 	u32 keystream[(size-1)/4 +1];
 

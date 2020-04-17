@@ -29,12 +29,12 @@ int main()
 
 	u32 digest[32] = {0};
 
-	process_message((u32*)msg.data(), digest, (u64)msg.size());
+	process_message(digest, (u32*)msg.data(), (u64)msg.size());
 
 	std::string dig((char*)digest, 32);
 
 	char hex_representation[64];
-	string2hexString((const u8*)digest, hex_representation, 32);
+	string2hexString(hex_representation, (const u8*)digest, 32);
 
 	std::string hex_rep(hex_representation, 64);
 
