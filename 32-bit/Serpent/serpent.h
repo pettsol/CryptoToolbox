@@ -1,20 +1,72 @@
 #ifndef SERPENT_H
 #define SERPENT_H
 
-#include "tables.h"
+#include <iostream>
+#include <climits>
+#include <fstream>
 
-#define N_ROUNDS 32
+#define SOSEMANUK_H
 
+#ifdef SOSEMANUK_H
+	#define N_ROUNDS 25
+#else
+	#define N_ROUNDS 33
+#endif
 
 #define ROTL_32(x, n) ( ((x) << (n)) | ((x) >> (32-n)) )
 
-struct cipher_state{
+// Check that the size of
+// data types are as 
+// expected
+
+#if (UCHAR_MAX != 0xFFU)
+#error UCHAR IS NOT 8 BITS
+#endif
+
+#if (USHRT_MAX != 0xFFFFU)
+#error USHORT IS NOT 16 BITS
+#endif
+
+#if (UINT_MAX != 0xFFFFFFFFU)
+#error UINT IS NOT 32 BITS
+#endif
+
+#if (ULLONG_MAX != 0xFFFFFFFFFFFFFFFFU)
+#error ULONGLONG IS NOT 64 BITS
+#endif
+
+// The following is required to force inline on compilers
+
+#ifdef _MSC_VER
+	#define forceinline __forceinline
+#elif defined(__GNUC__)
+	#define forceinline inline __attribute__((__always_inline__))
+#elif defined(__CLANG__)
+	#if __has_attribute(__always_inline__)
+		#define forceinline inline __attribute__((__always_inline__))
+	#else
+		#define forceinline inline
+	#endif
+#else
+	#define forceinline inline
+#endif
+
+// We can now typedef variables of fixed sizes
+
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned int u32;
+typedef unsigned long long u64;
+
+struct serpent_state{
 	u32 RK[4*N_ROUNDS];
 };
 
-void key_schedule(cipher_state *ctx, u8 *key, int size);
-void process_packet(cipher_state *ctx, u32 *out, u32 *in, u64 size);
-
+void serpent_key_schedule(serpent_state *ctx, u8 *key, int size);
+void serpent_process_packet(serpent_state *ctx, u32 *out, u32 *in, u64 size);
+#ifdef SOSEMANUK_H
+void serpent1(u32 *r0, u32 *r1, u32 *r2, u32 *r3);
+#endif
 inline void S0(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
 {
 	*r3 ^= *r0; *r4 = *r1;
@@ -151,7 +203,7 @@ inline void LT(u32 *r0, u32 *r1, u32 *r2, u32 *r3)
 	*r2 = ROTL_32(*r2, 22);
 }
 
-inline void ARK(cipher_state *ctx, u32 *r0, u32 *r1, u32 *r2, u32 *r3, int N)
+inline void ARK(serpent_state *ctx, u32 *r0, u32 *r1, u32 *r2, u32 *r3, int N)
 {
 	// RK's are held in a one dimensional array.
 	*r0 = (*r0) ^ (ctx->RK[4*N]);
@@ -159,57 +211,5 @@ inline void ARK(cipher_state *ctx, u32 *r0, u32 *r1, u32 *r2, u32 *r3, int N)
 	*r2 = (*r2) ^ (ctx->RK[4*N + 2]);
 	*r3 = (*r3) ^ (ctx->RK[4*N + 3]);
 }
-
-inline void rounds(cipher_state *ctx, u32 *r0, u32 *r1, u32 *r2, u32 *r3)
-{
-	// A fifth working register is needed
-	u32 *r4 = new u32;;
-
-	// Rounds
-	/* 0 */ ARK(ctx, r0, r1, r2, r3, 0); S0(r0, r1, r2, r3, r4); LT(r1, r4, r2, r0);
-	/* 1 */ ARK(ctx, r1, r4, r2, r0, 1); S1(r1, r4, r2, r0, r3); LT(r2, r1, r0, r4);
-	/* 2 */ ARK(ctx, r2, r1, r0, r4, 2); S2(r2, r1, r0, r4, r3); LT(r0, r4, r1, r3);
-	/* 3 */ ARK(ctx, r0, r4, r1, r3, 3); S3(r0, r4, r1, r3, r2); LT(r4, r1, r3, r2);
-	/* 4 */ ARK(ctx, r4, r1, r3, r2, 4); S4(r4, r1, r3, r2, r0); LT(r1, r0, r4, r2);
-	/* 5 */ ARK(ctx, r1, r0, r4, r2, 5); S5(r1, r0, r4, r2, r3); LT(r0, r2, r1, r4);
-	/* 6 */ ARK(ctx, r0, r2, r1, r4, 6); S6(r0, r2, r1, r4, r3); LT(r0, r2, r3, r1);
-	/* 7 */ ARK(ctx, r0, r2, r3, r1, 7); S7(r0, r2, r3, r1, r4); LT(r4, r1, r2, r0);
-
-	/* 8 */ ARK(ctx, r4, r1, r2, r0, 8); S0(r4, r1, r2, r0, r3); LT(r1, r3, r2, r4);
-	/* 9 */ ARK(ctx, r1, r3, r2, r4, 9); S1(r1, r3, r2, r4, r0); LT(r2, r1, r4, r3);
-	/* 10 */ ARK(ctx, r2, r1, r4, r3, 10); S2(r2, r1, r4, r3, r0); LT(r4, r3, r1, r0);
-	/* 11 */ ARK(ctx, r4, r3, r1, r0, 11); S3(r4, r3, r1, r0, r2); LT(r3, r1, r0, r2);
-	/* 12 */ ARK(ctx, r3, r1, r0, r2, 12); S4(r3, r1, r0, r2, r4); LT(r1, r4, r3, r2);
-	/* 13 */ ARK(ctx, r1, r4, r3, r2, 13); S5(r1, r4, r3, r2, r0); LT(r4, r2, r1, r3);
-	/* 14 */ ARK(ctx, r4, r2, r1, r3, 14); S6(r4, r2, r1, r3, r0); LT(r4, r2, r0, r1);
-	/* 15 */ ARK(ctx, r4, r2, r0, r1, 15); S7(r4, r2, r0, r1, r3); LT(r3, r1, r2, r4);
-	
-	/* 16 */ ARK(ctx, r3, r1, r2, r4, 16); S0(r3, r1, r2, r4, r0); LT(r1, r0, r2, r3);
-	/* 17 */ ARK(ctx, r1, r0, r2, r3, 17); S1(r1, r0, r2, r3, r4); LT(r2, r1, r3, r0);
-	/* 18 */ ARK(ctx, r2, r1, r3, r0, 18); S2(r2, r1, r3, r0, r4); LT(r3, r0, r1, r4);
-	/* 19 */ ARK(ctx, r3, r0, r1, r4, 19); S3(r3, r0, r1, r4, r2); LT(r0, r1, r4, r2);
-	/* 20 */ ARK(ctx, r0, r1, r4, r2, 20); S4(r0, r1, r4, r2, r3); LT(r1, r3, r0, r2);
-	/* 21 */ ARK(ctx, r1, r3, r0, r2, 21); S5(r1, r3, r0, r2, r4); LT(r3, r2, r1, r0);
-	/* 22 */ ARK(ctx, r3, r2, r1, r0, 22); S6(r3, r2, r1, r0, r4); LT(r3, r2, r4, r1);
-	/* 23 */ ARK(ctx, r3, r2, r4, r1, 23); S7(r3, r2, r4, r1, r0); LT(r0, r1, r2, r3);
-	
-	/* 24 */ ARK(ctx, r0, r1, r2, r3, 24); S0(r0, r1, r2, r3, r4); LT(r1, r4, r2, r0);
-	/* 25 */ ARK(ctx, r1, r4, r2, r0, 25); S1(r1, r4, r2, r0, r3); LT(r2, r1, r0, r4);
-	/* 26 */ ARK(ctx, r2, r1, r0, r4, 26); S2(r2, r1, r0, r4, r3); LT(r0, r4, r1, r3);
-	/* 27 */ ARK(ctx, r0, r4, r1, r3, 27); S3(r0, r4, r1, r3, r2); LT(r4, r1, r3, r2);
-	/* 28 */ ARK(ctx, r4, r1, r3, r2, 28); S4(r4, r1, r3, r2, r0); LT(r1, r0, r4, r2);
-	/* 29 */ ARK(ctx, r1, r0, r4, r2, 29); S5(r1, r0, r4, r2, r3); LT(r0, r2, r1, r4);
-	/* 30 */ ARK(ctx, r0, r2, r1, r4, 30); S6(r0, r2, r1, r4, r3); LT(r0, r2, r3, r1);
-	// In the last round, the LT is replaced with a final key addition
-	/* 31 */ ARK(ctx, r0, r2, r3, r1, 31); S7(r0, r2, r3, r1, r4); ARK(ctx, r4, r1, r2, r0, 32);
-
-	// Output the correct order. R1, R2 holds the correct values already.
-	*r3 = *r0;
-	*r0 = *r4;
-
-	// Clean up
-	delete r4;
-}
-
 
 #endif

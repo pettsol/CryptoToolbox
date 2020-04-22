@@ -2,55 +2,45 @@
 #include "../HexEncoder/encoder.h"
 
 #include <iostream>
+#include <cstring>
 
 int main()
 {
-	std::string keyString = "0000000000000000000000000000000000000000000000000000000000000000";
-//	std::string keyString = "15FC0D48D7F8199CBE3991834D96F32710000000000000000000000000000000";
+
+	// Hex test vector keystring
+	std::string keyString = "0101010101010101010101010101010101010101010101010101010101010101";
 
 	std::cout << "Key length: " << keyString.size() << std::endl;
 	
 	u8 key[32];
 	hex2stringString(key, keyString.data(), keyString.size());
 
-	std::string plainString = "00000000000000000000000000000000";
+	// Hex test vector plaintext
+	std::string plainString = "11010101010101010101010101010101";
 	
 	u8 plain[16];
 	hex2stringString(plain, plainString.data(), plainString.size());
 
-	cipher_state e_cs;
-	key_schedule(&e_cs, key, 32);
+	serpent_state e_cs; std::memset(&e_cs, 0, sizeof(e_cs));
 
+	serpent_key_schedule(&e_cs, key, 32);
+#ifdef SOSEMANUK_H
+	u8 cipher[48];
+#else
 	u8 cipher[16];
-	process_packet(&e_cs, (u32*)cipher, (u32*)plain, 16);
+#endif
+	serpent_process_packet(&e_cs, (u32*)cipher, (u32*)plain, 16);
 
+#ifdef SOSEMANUK_H
+	char hexCt[97];
+	string2hexString(hexCt, cipher, 48);
+	std::string hexCtString(hexCt, 96);
+#else
 	char hexCt[33];
 	string2hexString(hexCt, cipher, 16);
 	std::string hexCtString(hexCt, 32);
-
-	// Print the round keys
-	for (int i = 0; i < 33; i++)
-	{
-		char hexRK0[9];
-		char hexRK1[9];
-		char hexRK2[9];
-		char hexRK3[9];
-		string2hexString(hexRK0, (u8*)&e_cs.RK[4*i], 4);
-		string2hexString(hexRK1, (u8*)&e_cs.RK[4*i+1], 4);
-		string2hexString(hexRK2, (u8*)&e_cs.RK[4*i+2], 4);
-		string2hexString(hexRK3, (u8*)&e_cs.RK[4*i+3], 4);
-
-		std::string hexRK0String(hexRK0, 8);
-		std::string hexRK1String(hexRK1, 8);
-		std::string hexRK2String(hexRK2, 8);
-		std::string hexRK3String(hexRK3, 8);
-
-		std::cout << "Round key " << i << ": " << hexRK0String 
-			<< " " << hexRK1String << " " << hexRK2String << " " << hexRK3String << std::endl;
-	}
-	//
-
+#endif
 	std::cout << "Ciphertext: " << hexCtString << std::endl;
-
+	
 	std::cout << "Hello World!\n";
 }
