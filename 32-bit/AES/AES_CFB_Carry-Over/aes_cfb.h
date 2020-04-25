@@ -12,8 +12,10 @@
 // define modes
 // for encryption
 // and decryption
-#define encrypt 0
-#define decrypt 1
+#define ENCRYPT 0
+#define DECRYPT 1
+
+#define AES_BLOCKSIZE 16
 
 // Struct containing the shift register of previous ciphertexts
 // and the round keys of the cipher

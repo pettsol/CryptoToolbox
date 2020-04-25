@@ -52,7 +52,9 @@ int main()
 	// The following string will
 	// be encrypted.
 	std::string plaintext = "Hello world! This program demonstrates how \
-the implementation is to be used.";
+the implementation is to be used............";
+
+	std::cout << "Size: " << plaintext.size() << std::endl;
 
 	std::cout << "Plaintext: " << plaintext << std::endl;
 	// Declare a variable that
@@ -67,7 +69,7 @@ the implementation is to be used.";
 	// of the plaintext is also required.
 	// State that the input is to
 	// be encrypted.
-	cfb_process_packet(&e_cs, ciphertext, (u8*)plaintext.data(), plaintext.size(), encrypt);
+	cfb_process_packet(&e_cs, ciphertext, (u8*)plaintext.data(), plaintext.size(), ENCRYPT);
 
 	// Print the corresponding
 	// ciphertext:
@@ -88,7 +90,7 @@ the implementation is to be used.";
 	u8 recovered[ciphertext_string.size()];
 
 	// Decrypt
-	cfb_process_packet(&d_cs, recovered, (u8*)ciphertext_string.data(), ciphertext_string.size(), decrypt);
+	cfb_process_packet(&d_cs, recovered, (u8*)ciphertext_string.data(), ciphertext_string.size(), DECRYPT);
 
 	// Print the recovered text
 	std::string recovered_string((char*)recovered, ciphertext_string.size());

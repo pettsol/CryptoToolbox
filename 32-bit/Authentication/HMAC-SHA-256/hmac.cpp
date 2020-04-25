@@ -22,16 +22,16 @@
 // The HMAC may be initialized by pre-XOR'ing the key with
 // ipad / opad, saving time when packets are processed in
 // a later stage.
-void hmac_initialization(hmac_state *ctx, u8* key, int B)
+void hmac_load_key(hmac_state *ctx, u8* key, int B)
 {
 	// If the key input is larger than desired, the
 	// key must be hashed to the correct size by using
 	// the associated hash-function.
 	
 	// Create a local copy of the key
-	u8 localKey[KEYLENGTH];
+	u8 localKey[HMAC_KEYLENGTH];
 
-	if (B > KEYLENGTH) {
+	if (B > HMAC_KEYLENGTH) {
 		u8 hashedKey[DIGESTSIZE];
 		process_message((u32*)hashedKey, (u32*)key, B);
 		std::memcpy(localKey, hashedKey, DIGESTSIZE);
@@ -41,12 +41,12 @@ void hmac_initialization(hmac_state *ctx, u8* key, int B)
 	}
 
 	// Pad the key with zeroes if the size is too small
-	for (int i = B; i < KEYLENGTH; i++) {
+	for (int i = B; i < HMAC_KEYLENGTH; i++) {
 		localKey[i] = 0;
 	}
 
 	// Pad the key with the ipad and opad respectively
-	for (int i = 0; i < KEYLENGTH; i++)
+	for (int i = 0; i < HMAC_KEYLENGTH; i++)
 	{
 		// Generate inner and outer padded key
 		ctx->inner_key[i] = ipad ^ localKey[i];
@@ -57,22 +57,22 @@ void hmac_initialization(hmac_state *ctx, u8* key, int B)
 void tag_generation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int tagLength)
 {
 	// The inner key is used in the first computation along with the message
-	u8 inner_computation[dataLength+KEYLENGTH];
-	std::memcpy(inner_computation, ctx->inner_key, KEYLENGTH);
-	std::memcpy(&(inner_computation[KEYLENGTH]), message, dataLength);
+	u8 inner_computation[dataLength+HMAC_KEYLENGTH];
+	std::memcpy(inner_computation, ctx->inner_key, HMAC_KEYLENGTH);
+	std::memcpy(&(inner_computation[HMAC_KEYLENGTH]), message, dataLength);
 
 	// Compute the hash of the message and the inner key
 	u8 inner_hash[DIGESTSIZE];
-	process_message((u32*)inner_hash, (u32*)inner_computation, dataLength+KEYLENGTH);
+	process_message((u32*)inner_hash, (u32*)inner_computation, dataLength+HMAC_KEYLENGTH);
 	
 	// The outer key is appended to the inner hash.
-	u8 outer_computation[DIGESTSIZE+KEYLENGTH] = {0};
-	std::memcpy(outer_computation, ctx->outer_key, KEYLENGTH);
-	std::memcpy(&(outer_computation[KEYLENGTH]), inner_hash, DIGESTSIZE);
+	u8 outer_computation[DIGESTSIZE+HMAC_KEYLENGTH] = {0};
+	std::memcpy(outer_computation, ctx->outer_key, HMAC_KEYLENGTH);
+	std::memcpy(&(outer_computation[HMAC_KEYLENGTH]), inner_hash, DIGESTSIZE);
 
 	// Computer the final hash
 	u8 outer_hash[DIGESTSIZE];
-	process_message((u32*)outer_hash, (u32*)outer_computation, DIGESTSIZE+KEYLENGTH);
+	process_message((u32*)outer_hash, (u32*)outer_computation, DIGESTSIZE+HMAC_KEYLENGTH);
 	
 	// The final message authentication code is then found by
 	// taking the leftmost t bytes.

@@ -25,7 +25,6 @@ void hc128_initialize(hc128_state *cs, u32 key[4], u32 iv[4])
 	char hexKey[33];
 	string2hexString(hexKey, (u8*)key, 16);
 	std::string printKey(hexKey, 32);
-	std::cout << "Key: " << printKey << std::endl;
 
 	for (int i = 16; i < 1280; i++)
 	{
