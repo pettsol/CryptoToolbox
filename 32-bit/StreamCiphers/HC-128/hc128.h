@@ -56,7 +56,8 @@ typedef unsigned long long u64;
 #define ROTR_32(x,n) ( (x >> (n))  | (x << (32-(n)) ) )
 #define ROTL_32(x,n) ROTR_32(x, (32-(n)))
 
-#define KEYLENGTH 16
+#define HC128_KEYLENGTH 16
+#define HC128_IV_SIZE 16
 
 struct hc128_state{
 	u32 P[512];

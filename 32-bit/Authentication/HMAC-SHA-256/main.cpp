@@ -32,7 +32,7 @@ F72206B65796C656E3D626C6F636B6C656E";
 	u8 key[keystring.size()/2];
 	hex2stringString(key, keystring.data(), keystring.size());
 
-	hmac_initialization(&hs, key, keystring.size()/2);
+	hmac_load_key(&hs, key, keystring.size()/2);
 
 	u8 tag[16];
 

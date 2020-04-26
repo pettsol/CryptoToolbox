@@ -35,7 +35,7 @@ mentioned in the cipher documentation.
 Compile the sample program with g++ using the 
 following command:
 
-g++ main.cpp hc128.cpp ../HexEncoder/encoder.cpp -o main
+g++ main.cpp hc128.cpp ../../HexEncoder/encoder.cpp -o main
 
 
 Petter Solnoer - 16/04/2020

@@ -6,6 +6,8 @@
 
 #define M 0x54655307
 
+#define SOSEMANUK_KEYLENGTH 16
+
 struct sosemanuk_state{
 	// Keep stuff here
 	// A serpent cipher is needed

@@ -52,20 +52,20 @@ typedef unsigned long long u64;
 	#define forceinline inline
 #endif
 
-#define KEYLENGTH 64
+#define HMAC_KEYLENGTH 64
 
 struct hmac_state{
-	u8 key[KEYLENGTH];
+	u8 key[HMAC_KEYLENGTH];
 
-	u8 inner_key[KEYLENGTH];
-	u8 outer_key[KEYLENGTH];
+	u8 inner_key[HMAC_KEYLENGTH];
+	u8 outer_key[HMAC_KEYLENGTH];
 };
 
 static const u8 ipad = 0x36;
 static const u8 opad = 0x5c;
 
-void hmac_initialization(hmac_state *ctx, u8* key, int B);
+void hmac_load_key(hmac_state *ctx, u8* key, int B);
 void tag_generation(hmac_state *ctx, u8* tag, u8 *message, u64 dataLength, int tagSize);
-int tag_validation(hmac_state *ctx, u8 tag[16], u8 *message, u64 dataLength, int tagSize);
+int tag_validation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int tagSize);
 
 #endif

@@ -302,6 +302,7 @@ void cfb_process_packet(cipher_state *cs, u8 *out, u8 *in, int size, int mode)
 				while (size > 0)
 				{
 					*byte_ptr_out = (*byte_ptr_in) ^ ( (u8)(keystream[k] >> (24 - (8*(l--)))));
+					byte_ptr_out++; byte_ptr_in++;
 					size -= 1;
 				}
 			}
