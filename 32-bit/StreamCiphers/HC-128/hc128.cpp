@@ -89,6 +89,10 @@ void hc128_generate_keystream(hc128_state *cs, u32 *keystream, u64 size)
 
 void hc128_process_packet(hc128_state *cs, u8 *output, u8 *input, u64 size)
 {
+	// Assert that message size is strictly greater than zero
+	if ( size < 1 ) return;
+		
+
 	u32 keystream[(size-1)/4 +1];
 
 	// Generate enough keystream

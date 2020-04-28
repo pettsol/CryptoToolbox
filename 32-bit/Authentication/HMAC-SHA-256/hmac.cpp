@@ -56,8 +56,11 @@ void hmac_load_key(hmac_state *ctx, u8* key, int B)
 
 void tag_generation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int tagLength)
 {
+	// Assert that datalength is strictly positive
+	if ( dataLength < 1 ) return;
+
 	// The inner key is used in the first computation along with the message
-	u8 inner_computation[dataLength+HMAC_KEYLENGTH];
+	u8 *inner_computation = new u8[dataLength+HMAC_KEYLENGTH];
 	std::memcpy(inner_computation, ctx->inner_key, HMAC_KEYLENGTH);
 	std::memcpy(&(inner_computation[HMAC_KEYLENGTH]), message, dataLength);
 
@@ -77,6 +80,9 @@ void tag_generation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int t
 	// The final message authentication code is then found by
 	// taking the leftmost t bytes.
 	std::memcpy(tag, outer_hash, tagLength);
+
+	// Clean up
+	delete[] inner_computation;
 }
 
 int tag_validation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int tagLength)
