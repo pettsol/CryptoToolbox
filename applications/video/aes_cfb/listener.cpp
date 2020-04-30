@@ -14,7 +14,7 @@
 
 
 
-//IO
+//general
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -23,10 +23,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#include<thread>
 
 //crypto
-#include "/home/oysteinvolden/catkin_ws_crypto/src/beginner_tutorials/include/beginner_tutorials/aes_cfb.h"
+#include "aes_cfb.h"
 
 
 #define BLOCKSIZE 16
@@ -83,14 +82,14 @@ int main(int argc, char **argv)
 
   ros::NodeHandle n;
 
-  ros::Subscriber encryptedImageSubscriber = n.subscribe("/static_image", 1000, cameraCallback);
+  // subscribe for encrypted stream from talker
+  ros::Subscriber encryptedImageSubscriber = n.subscribe("/encrypted_stream_from_talker", 1000, cameraCallback);
 
-  ros::Publisher encryptedImagePublisher2 = n.advertise<sensor_msgs::Image>("/static_image2", 1000);
+  // encrypted image publisher
+  ros::Publisher encryptedImagePublisher2 = n.advertise<sensor_msgs::Image>("/encrypted_stream_from_listener", 1000);
 
   u8 key[BLOCKSIZE] = {0};
   u32 iv[BLOCKSIZE/4] = {0};
-
-  //ros::Rate loop_rate(10);
 
   while (ros::ok()){
 
@@ -119,7 +118,6 @@ int main(int argc, char **argv)
 	      //cv::waitKey(500);
 
         //encrypt again and send back
-
         cipher_state e_cs;
 	      cfb_initialize_cipher(&e_cs, key, iv);
 
@@ -141,12 +139,10 @@ int main(int argc, char **argv)
         // publish encrypted image via ROS
         sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", encrypted).toImageMsg();
         encryptedImagePublisher2.publish(msg);
-        //ROS_INFO("Publish encrypted image back");
  
     }
  
     ros::spinOnce();
-    //loop_rate.sleep();
   }
 
  

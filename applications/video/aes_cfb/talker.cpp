@@ -13,7 +13,7 @@
 #include <opencv2/opencv.hpp>
 
 
-//IO
+//general
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -22,11 +22,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#include<thread>
-
 
 //crypto
-#include "/home/oysteinvolden/catkin_ws_crypto/src/beginner_tutorials/include/beginner_tutorials/aes_cfb.h"
+#include "aes_cfb.h"
 
 
 std::chrono::time_point<std::chrono::system_clock> start, end;
@@ -85,39 +83,36 @@ int main(int argc, char **argv)
 
   ros::NodeHandle n;
 
-  // define encrypted image publisher
-  ros::Publisher encryptedImagePublisher = n.advertise<sensor_msgs::Image>("/static_image", 1000);
+  // encrypted image publisher
+  ros::Publisher encryptedImagePublisher = n.advertise<sensor_msgs::Image>("/encrypted_stream_from_talker", 1000);
 
 
   // subscribe for encrypted image sent back  
-  ros::Subscriber encryptedImageSubscriber2 = n.subscribe("/static_image2", 1000, cameraCallback);
+  ros::Subscriber encryptedImageSubscriber2 = n.subscribe("/encrypted_stream_from_listener", 1000, cameraCallback);
 
 
   /*
   // read image 
-  std::string imagePath = "/home/oysteinvolden/catkin_ws_crypto/src/beginner_tutorials/src/bird.jpg";
+  std::string imagePath = "/home/oysteinvolden/catkin_ws_crypto/src/data/beginner_tutorials/src/bird.jpg";
   cv::Mat image, greyImage;
 	image = cv::imread(imagePath, cv::IMREAD_COLOR);
   // convert to greyscale
 	cv::cvtColor(image, greyImage, cv::COLOR_BGR2GRAY);
   */
 
- cv::VideoCapture cap("/home/oysteinvolden/catkin_ws_crypto/src/beginner_tutorials/src/file_example_AVI_1280_1_5MG.avi");
+ cv::VideoCapture cap("/home/oysteinvolden/catkin_ws_crypto/src/beginner_tutorials/src/data/file_example_AVI_1280_1_5MG.avi");
 
  if(!cap.isOpened()){
-   std::cout << "test" << std::endl;
+   std::cout << "not opened" << std::endl;
    return -1;
  }
 
- //ros::Rate loop_rate(10);
 
   int count = 0;
   while (ros::ok())
   {
     
    /// *** IMAGE encryption *** 
-
-   
     cv::Mat frame, greyImage;
     cap >> frame; // get a new frame from video stream
     cv::cvtColor(frame, greyImage, cv::COLOR_BGR2GRAY);
@@ -191,10 +186,7 @@ int main(int argc, char **argv)
 
     }
   
-
-
     ros::spinOnce();
-    //loop_rate.sleep();
 
   }
   
