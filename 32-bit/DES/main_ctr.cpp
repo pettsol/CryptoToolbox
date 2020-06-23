@@ -14,17 +14,19 @@ int main()
 
 	des_key_schedule_encrypt(&e_cs, key);
 
-	std::string message = "STARFALLSTARFALL";
+	std::string message = "STARFALLSTARFALLSTARFALLSTARFALL";
 
 	std::cout << "Message size: " << message.size() << std::endl;
 
-	u8 ct[16];
+	u8 ct[32];
 
-	des_process_packet_ecb(&e_cs, (u32*)ct, (u32*)message.data(), 16);
+	u32 nonce[3] = {0};
 
-	char hex_ct[33];
+	des_process_packet_ctr(&e_cs, (u32*)ct, (u32*)message.data(), nonce, 32);
 
-	string2hexString(hex_ct, ct, 16);
+	char hex_ct[65];
+
+	string2hexString(hex_ct, ct, 32);
 
 	std::string hex_ct_string(hex_ct);
 

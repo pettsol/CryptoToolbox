@@ -1,4 +1,5 @@
 #include "des.h"
+#include <cstring>
 
 void des_key_schedule_encrypt(des_state *cs, u8 *key)
 {
@@ -102,12 +103,34 @@ void des_ecb_block(des_state *cs, u32 *output, u32 *input)
 	*output++ = Y; *output = X;
 }
 
-void des_process_packet(des_state *cs, u32 *output, u32 *input, u64 size)
+void des_process_packet_ecb(des_state *cs, u32 *output, u32 *input, u64 size)
 {
 	// We always assume that the size divides the block size, 8.
 	while (size > 0)
 	{
 		des_ecb_block(cs, output, input);
 		output += 2; input += 2; size -= 8;
+	}
+}
+
+void des_process_packet_ctr(des_state *cs, u32 *output, u32 *input, u32 *nonce, u64 size)
+{
+	// We always assume that the size divides the block size.
+	// Furthermore, we use a 96 bit nonce and a 32 bit counter.
+	u32 iv[4];
+	std::memcpy(iv, nonce, 12);
+	iv[3] = 0;
+	while (size > 0)
+	{
+		u32 keystream[2] = {0};
+		des_ecb_block(cs, keystream, iv);
+
+		*output = *input ^ keystream[0];
+		output++; input++;
+
+		*output = *input ^ keystream[1];
+		output++; input++;
+
+		iv[3] += 1; size -= 8;
 	}
 }

@@ -54,7 +54,8 @@ struct des_state {
 void des_key_schedule_encrypt(des_state *cs, u8 *key);
 void des_key_schedule_decrypt(des_state *cs, u8 *key);
 void des_ecb_block(des_state *cs, u32 *output, u32 *input);
-void des_process_packet(des_state *cs, u32 *output, u32 *input, u64 size);
+void des_process_packet_ecb(des_state *cs, u32 *output, u32 *input, u64 size);
+void des_process_packet_ctr(des_state *cs, u32 *output, u32 *input, u32 *nonce, u64 size);
 
 static const u32 LHs[16] =
 {
