@@ -169,6 +169,12 @@ void MD5Final(u8 digest[16], MD5_CTX *context)
   MD5_memset ((u8*)context, 0, sizeof (*context));
 }
 
+void MD5_process_packet(MD5_CTX *cs, u8 digest[16], u8 *input, u32 size)
+{
+	MD5Init(cs);
+	MD5Update(cs, input, size);
+	MD5Final(digest, cs);
+}
 
 /* MD5 basic transformation. Transforms state based on block.
  */

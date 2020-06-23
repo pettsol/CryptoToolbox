@@ -97,5 +97,7 @@ void MD5Init(MD5_CTX *);
 void MD5Update(MD5_CTX *, u8 *, u32);
 void MD5Final(u8 [16], MD5_CTX *);
 
+void MD5_process_packet(MD5_CTX *cs, u8 digest[16], u8 *input, u32 size);
+
 
 #endif

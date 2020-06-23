@@ -12,11 +12,13 @@ int main()
 
 	MD5_CTX cs;
 
-	MD5Init(&cs);
+//	MD5Init(&cs);
 
-	MD5Update(&cs, (u8*)test_string.data(), (u32)test_string.size());
+//	MD5Update(&cs, (u8*)test_string.data(), (u32)test_string.size());
 
-	MD5Final(digest, &cs);
+//	MD5Final(digest, &cs);
+
+	MD5_process_packet(&cs, digest, (u8*)test_string.data(), (u32)test_string.size());
 
 	char hex_digest[33];
 
