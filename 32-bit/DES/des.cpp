@@ -71,7 +71,7 @@ void des_key_schedule_encrypt(des_state *cs, u8 *key)
     }
 }
 
-void des_key_schedule_decrypt(des_state *cs, u32 *key)
+void des_key_schedule_decrypt(des_state *cs, u8 *key)
 {
 	des_key_schedule_encrypt(cs, (u8*)key);
 
