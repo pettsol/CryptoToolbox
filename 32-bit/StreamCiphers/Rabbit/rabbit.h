@@ -54,6 +54,8 @@ static const u32 A[8] = {
 };
 
 struct rabbit_state{
+	u32 MASTER_X[8];
+	u32 MASTER_C[8];
 	u32 X[8];
 	u32 C[8];
 	u8 carry;

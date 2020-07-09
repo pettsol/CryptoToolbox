@@ -83,6 +83,12 @@ void rabbit_key_setup(rabbit_state *cs, u32 key[4])
 	{
 		cs->C[j] = cs->C[j] ^ cs->X[(j+4) & 0x7];
 	}
+	// Master state has been derived. Save for future state updates
+	for (int j = 0; j < 8; j++)
+	{
+		cs->MASTER_C[j] = cs->C[j];
+		cs->MASTER_X[j] = cs->X[j];
+	}
 #ifdef DEBUG
 	std::cout << "\n\n\nAfter final XOR\n" << std::endl;
 	print_inner_state(cs);
@@ -95,15 +101,26 @@ void rabbit_key_setup(rabbit_state *cs, u32 key[4])
 // state from the key setup.
 void rabbit_iv_setup(rabbit_state *cs, u32 iv[2])
 {
+
+	// Set X variable to master state
+	cs->X[0] = cs->MASTER_X[0]; 
+	cs->X[1] = cs->MASTER_X[1];
+	cs->X[2] = cs->MASTER_X[2];
+	cs->X[3] = cs->MASTER_X[3];
+	cs->X[4] = cs->MASTER_X[4];
+	cs->X[5] = cs->MASTER_X[5];
+	cs->X[6] = cs->MASTER_X[6];
+	cs->X[7] = cs->MASTER_X[7];
+
 	u16 *iv_shrt = (u16*)iv; 
-	cs->C[0] = cs->C[0] ^ iv[0];
-	cs->C[1] = cs->C[1] ^ ( (iv_shrt[3] << 16) | iv_shrt[1] );
-	cs->C[2] = cs->C[2] ^ iv[1];
-	cs->C[3] = cs->C[3] ^ ( (iv_shrt[2] << 16) | iv_shrt[0] );
-	cs->C[4] = cs->C[4] ^ iv[0];
-	cs->C[5] = cs->C[5] ^ ( (iv_shrt[3] << 16) | iv_shrt[1] );
-	cs->C[6] = cs->C[6] ^ iv[1];
-	cs->C[7] = cs->C[7] ^ ( (iv_shrt[2] << 16) | iv_shrt[0] );
+	cs->C[0] = cs->MASTER_C[0] ^ iv[0];
+	cs->C[1] = cs->MASTER_C[1] ^ ( (iv_shrt[3] << 16) | iv_shrt[1] );
+	cs->C[2] = cs->MASTER_C[2] ^ iv[1];
+	cs->C[3] = cs->MASTER_C[3] ^ ( (iv_shrt[2] << 16) | iv_shrt[0] );
+	cs->C[4] = cs->MASTER_C[4] ^ iv[0];
+	cs->C[5] = cs->MASTER_C[5] ^ ( (iv_shrt[3] << 16) | iv_shrt[1] );
+	cs->C[6] = cs->MASTER_C[6] ^ iv[1];
+	cs->C[7] = cs->MASTER_C[7] ^ ( (iv_shrt[2] << 16) | iv_shrt[0] );
 
 	for (int i = 0; i < 4; i++)
 	{
