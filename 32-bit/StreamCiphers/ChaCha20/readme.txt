@@ -27,6 +27,9 @@ the following command:
 
 g++ main.cpp chacha.cpp ../../HexEncoder/encoder.cpp -o main
 
+For round reduced variants, compile with the following flags:
+	- 12 rounds: -D TWELWE_ROUNDS
+	- 8 rounds:  -D EIGHT_ROUNDS
 
-Petter Solnoer - 10/06/2020
+Petter Solnoer - 09/07/2020
 ////////////////////////////////////////////////
