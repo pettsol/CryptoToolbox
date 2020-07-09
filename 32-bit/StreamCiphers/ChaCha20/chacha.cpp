@@ -60,7 +60,7 @@ void chacha20_block(chacha_state *ctx, u32 counter, u32 *keystream)
 	int NROUNDS = 20;
 #endif
 
-	for (int i = 0; i < NROUNDS; i++)
+	for (int i = 0; i < (NROUNDS/2); i++)
 	{
 		inner_block(&ctx_work);
 	}
