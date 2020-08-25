@@ -5,11 +5,11 @@
 // Petter Solnoer - 24/08/2020   //
 ///////////////////////////////////
 
-#include <iostream>
-#include <fstream>
-#include "aegis_128.h"
 #include <string>
 #include <cmath>
+
+#include "aegis_128.h"
+#include "../HexEncoder/encoder.h"
 
 void always_memset(void *dest, int ch, size_t count)
 {
@@ -81,7 +81,6 @@ void aegis_process_ad(aegis_state *cs, u8 *ad, u64 adlen)
 {
 	if (!adlen) return;
 
-	std::cout << "Inside ad\n";
 	u32 *w_ptr;
 
 	if (adlen % 16)
@@ -89,6 +88,7 @@ void aegis_process_ad(aegis_state *cs, u8 *ad, u64 adlen)
 		// PAD
 		int pad_length = 16 - (adlen % 16);
 		u8 *padded_ad;
+
 		// Allocate memory for padded ad, initialized to zero.
 		padded_ad = new u8 [adlen+pad_length]();
 		std::memcpy(padded_ad, ad, adlen);
@@ -97,7 +97,6 @@ void aegis_process_ad(aegis_state *cs, u8 *ad, u64 adlen)
 		// Update state
 		for (int i = 0; i < std::ceil(double(adlen)/16); i++)
 		{
-			std::cout << "Update state, padded ad\n";
 			aegis_state_update(cs, (w_ptr+4*i));
 		}
 		delete[] padded_ad;
@@ -106,7 +105,6 @@ void aegis_process_ad(aegis_state *cs, u8 *ad, u64 adlen)
 	w_ptr = (u32*)ad;
 	for (int i = 0; i < std::ceil(double(adlen)/16); i++)
 	{
-		std::cout << "Update state, reg ad\n";
 		aegis_state_update(cs, (w_ptr+4*i));
 	}
 	return;
@@ -119,9 +117,6 @@ void aegis_encrypt(aegis_state *cs, u8 *ct, u8 *pt, u64 msglen)
 	u32 *ct_w_ptr = (u32*)ct;
 	u32 *pt_w_ptr = (u32*)pt;
 
-	//u64 u = std::ceil(double(adlen)/16);
-	//u64 v = std::ceil(double(msglen)/16);
-
 	u64 tmp = 0;
 
 	// Encrypt full blocks
@@ -133,13 +128,10 @@ void aegis_encrypt(aegis_state *cs, u8 *ct, u8 *pt, u64 msglen)
 		*ct_w_ptr++ = *pt_w_ptr++ ^ cs->s1[2] ^ cs->s4[2] ^ (cs->s2[2] & cs->s3[2]);
 		*ct_w_ptr++ = *pt_w_ptr++ ^ cs->s1[3] ^ cs->s4[3] ^ (cs->s2[3] & cs->s3[3]);
 
-		std::cout << "Inside full blocks\n";
 		// Update the state
 		aegis_state_update(cs, (pt_w_ptr-4));
 
 	}
-
-	std::cout << "Full blocks\n";
 
 	if (tmp == msglen) return;
 
@@ -152,10 +144,9 @@ void aegis_encrypt(aegis_state *cs, u8 *ct, u8 *pt, u64 msglen)
 	// Encrypt individual words if applicable
 	for (tmp; tmp < (msglen-3); tmp = tmp+4)
 	{
-		*ct_w_ptr++ = *pt_w_ptr++ ^ cs->s1[i] ^ cs->s4[i] ^ (cs->s2[i] & cs->s3[i]); i++;
+		*ct_w_ptr++ = *pt_w_ptr++ ^ cs->s1[i] ^ cs->s4[i] ^ (cs->s2[i] & cs->s3[i]);
+		i++;
 	}
-
-	std::cout << "Individual blocks\n";
 
 	// Encrypt individual bytes if applicable
 	ct = (u8*) ct_w_ptr;
@@ -169,17 +160,17 @@ void aegis_encrypt(aegis_state *cs, u8 *ct, u8 *pt, u64 msglen)
 		tmp++;
 	}
 	aegis_state_update(cs, padded_block);
-	std::cout << "Individual bytes\n";
 	return;
 }
 
 void aegis_decrypt(aegis_state *cs, u8 *pt, u8 *ct, u64 msglen)
 {
+	if (!msglen) return;
 	u32 *pt_w_ptr = (u32*)pt;
 	u32 *ct_w_ptr = (u32*)ct;
 	
 	u64 tmp = 0;
-	for (tmp; tmp < std::ceil(double(msglen)/16); tmp = tmp + 16)
+	for (tmp; tmp < msglen-15; tmp += 16)
 	{
 		// Decrypt using state
 		*pt_w_ptr++ = *ct_w_ptr++ ^ cs->s1[0] ^ cs->s4[0] ^ (cs->s2[0] & cs->s3[0]);
@@ -192,15 +183,19 @@ void aegis_decrypt(aegis_state *cs, u8 *pt, u8 *ct, u64 msglen)
 
 	if (tmp == msglen) return;
 
+	int overshoot = msglen-tmp;
+
 	// Decrypt individual words if applicable
 	u32 padded_block[4] = {0};
-	std::memcpy(padded_block, pt_w_ptr, msglen-tmp);
+	u32 *tmp_ptr = pt_w_ptr;
+	//std::memcpy(padded_block, pt_w_ptr, msglen-tmp);
 
 	int i = 0;
 
-	for (tmp; tmp < (msglen-4); tmp = tmp+4)
+	for (tmp; tmp < (msglen-3); tmp = tmp+4)
 	{
 		*pt_w_ptr++ = *ct_w_ptr++ ^ cs->s1[i] ^ cs->s4[i] ^ (cs->s2[i] & cs->s3[i]);
+		i++;
 	}
 
 	// Decrypt individual bytes if applicable
@@ -211,14 +206,25 @@ void aegis_decrypt(aegis_state *cs, u8 *pt, u8 *ct, u64 msglen)
 	while (tmp < msglen)
 	{
 		*pt++ = *ct++ ^ (u8)((cs->s1[i] ^ cs->s4[i] ^ (cs->s2[i] & cs->s3[i])) >> 8*j++);
+		tmp++;
 	}
+
+	std::memcpy(padded_block, tmp_ptr, overshoot);
+		
 	aegis_state_update(cs, padded_block);
 }
 
 void aegis_finalize(aegis_state *cs, u32 *tag, u64 adlen, u64 msglen)
 {
-	u32 tmp[4];
-	std::memcpy(tmp, &adlen, 8); std::memcpy(tmp+2, &msglen, 8);
+	u32 tmp[4] = {0};
+
+	// Cipher specifices bit-length, rather than
+	// byte length.
+	u64 bit_adlen = adlen * 8;
+	u64 bit_msglen = msglen * 8;
+
+	std::memcpy(tmp, &bit_adlen, 8);
+	std::memcpy(tmp+2, &bit_msglen, 8);
 
 	tmp[0] = tmp[0] ^ cs->s3[0];
 	tmp[1] = tmp[1] ^ cs->s3[1];
@@ -249,7 +255,6 @@ void aegis_encrypt_packet(aegis_state *cs, u8 *ct, u8* tag, u8 *pt, u8 *ad, u32 
 
 	aegis_encrypt(cs, ct, pt, msglen);
 
-	std::cout << "Encrypt\n";
 	aegis_finalize(cs, (u32*)tag, adlen, msglen);
 }
 
@@ -259,7 +264,7 @@ int aegis_decrypt_packet(aegis_state *cs, u8 *pt, u8 *ct, u8 *ad, u32 *iv, u32 *
 	u32 re_tag[4];
 
 	aegis_initialize(cs, iv);
-	
+
 	aegis_process_ad(cs, ad, adlen);
 
 	aegis_decrypt(cs, pt, ct, msglen);
@@ -268,6 +273,8 @@ int aegis_decrypt_packet(aegis_state *cs, u8 *pt, u8 *ct, u8 *ad, u32 *iv, u32 *
 
 	// Check whether recomputed tag is similar to prev. tag.
 	// If they are not the same, remove all purge the pt and return false.
+
+	
 	for (int i = 0; i < 4; i++)
 	{
 		if (re_tag[i] != tag[i]) flag = 1;
@@ -276,6 +283,7 @@ int aegis_decrypt_packet(aegis_state *cs, u8 *pt, u8 *ct, u8 *ad, u32 *iv, u32 *
 	{
 		// Tags do not match
 		always_memset(pt, 0, msglen);
+		always_memset(tag, 0, 16);
 		return 0;
 	}
 	return 1;

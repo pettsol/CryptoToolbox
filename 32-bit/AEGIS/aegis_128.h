@@ -10,17 +10,12 @@
 
 #include "tables.h"
 
-#include <iostream>
 #include <cstring>
-// define modes
-// for encryption
-// and decryption
-#define ENCRYPT 0
-#define DECRYPT 1
-
-#define AES_BLOCKSIZE 16
 
 // Magic constants
+#define AEGIS_BLOCKSIZE 16
+#define IV_SIZE 16
+
 // AEGIS state consist of 80 bytes, held in 16-byte (128 bit)
 // sequences. There is also a 16-byte temp variable w.
 struct aegis_state{
@@ -97,8 +92,6 @@ inline void round(u32 *a, u32 *b, u32 *c, u32 *d, u32 *round_key)
 // State update function
 inline void aegis_state_update(aegis_state *cs, u32 *message_block)
 {
-
-	std::cout << "Aegis state update\n";
 
 	u32 tmp[4];
 	u32 tmp_key[4];
