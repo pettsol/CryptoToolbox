@@ -2,13 +2,19 @@
 // This implementation was been  //
 // placed in the public domain by//
 //                               //
-// Petter Solnoer - 31/03/2020   //
+// Petter Solnoer - 26/08/2020   //
 ///////////////////////////////////
 
 #include <iostream>
 #include <fstream>
 #include "aes_cfb.h"
 #include <string>
+
+#if __ARM_NEON
+#include <arm_acle.h>
+#include <arm_neon.h>
+/* Advanced SIMD intrinsics are now available */
+#endif
 
 u32 RotByte(u32 word)
 {
@@ -65,16 +71,38 @@ void cfb_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv)
 
 void aes_encrypt(cipher_state *cs, u32 keystream[])
 {
+#ifdef ARM_INTRINSICS
+	uint8x16_t B_S = vld1q_u8((u8*)&cs->reg1);
+	uint8x16_t B_K0 = vld1q_u8((u8*)cs->rk);
+	uint8x16_t B_K1 = vld1q_u8((u8*)&cs->rk[4]);
+	uint8x16_t B_K2 = vld1q_u8((u8*)&cs->rk[8]);
+	uint8x16_t B_K3 = vld1q_u8((u8*)&cs->rk[12]);
+	uint8x16_t B_K4 = vld1q_u8((u8*)&cs->rk[16]);
+	uint8x16_t B_K5 = vld1q_u8((u8*)&cs->rk[20]);
+	uint8x16_t B_K6 = vld1q_u8((u8*)&cs->rk[24]);
+	uint8x16_t B_K7 = vld1q_u8((u8*)&cs->rk[28]);
+	uint8x16_t B_K8 = vld1q_u8((u8*)&cs->rk[32]);
+	uint8x16_t B_K9 = vld1q_u8((u8*)&cs->rk[36]);
+	uint8x16_t B_K10 = vld1q_u8((u8*)&cs->rk[40]);
+
+	B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K0));
+	B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K1));
+	B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K2));
+	B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K3));
+	B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K4));
+	B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K5));
+	B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K6));
+	B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K7));
+	B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K8));
+	B_S = vaeseq_u8(B_S, B_K9);
+	B_S = veorq_u8(B_S, B_K10);
+
+	vst1q_u8((u8*)keystream, B_S);
+	vst1q_u8((u8*)&cs->reg1, B_S);
+#else
 	initial_round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[0]));
 	#ifndef ROUND_REDUCED
-	#ifdef ARM_ENABLED
-	const uint8x16_t Key = vld1q_u8((u8*)&cs->rk[4]);
-	uint8x16_t B = vld1q_u8((u8*)&cs->reg1);
-	B = vaesmcq_u8(vaeseq_u8(B, Key));
-	vst1q_u8((u8*)&cs->reg1, B);
-	#else
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[4]));
-	#endif
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[8]));
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[12]));
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[16]));
@@ -87,6 +115,7 @@ void aes_encrypt(cipher_state *cs, u32 keystream[])
 	final_round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[40]));
 	keystream[0] = cs->reg1; keystream[1] = cs->reg2;
 	keystream[2] = cs->reg3; keystream[3] = cs->reg4;
+#endif
 }
 
 void full_state_update(cipher_state *cs, u32 *ctxt)
