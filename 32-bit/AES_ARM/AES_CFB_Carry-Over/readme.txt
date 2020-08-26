@@ -19,9 +19,9 @@ of operation however, no attacks
 against the CFB mode with a predictable
 IV is known.
 
-Both a full version of the cipher
-and a round-reduced variant is
-available.
+THIS VARIANT IS DESIGNED FOR ARM-DEVICES. COMPILE
+WITH -D ARM_INTRINSICS SET. If not, the cipher
+reverts to a table-driven variant.
 
 Compilation:
 
@@ -30,16 +30,12 @@ as follows:
 
 FULL VERSION:
 
-g++ main.cpp aes_cfb.cpp -o main
-
-ROUND-REDUCED VERSION (6 rounds)
-
-g++ main.cpp aes_cfb.cpp -o main -D ROUND_REDUCED
+g++ main.cpp aes_cfb.cpp -o main -march=armv8-a+crypto -D ARM_INTRINSICS
 
 The implementation has been verified
 using test vectors from the official
 NIST documentation.
 
 
-Petter Solnoer - 31/03/2020
+Petter Solnoer - 26/08/2020
 /////////////////////////////////////////////////
