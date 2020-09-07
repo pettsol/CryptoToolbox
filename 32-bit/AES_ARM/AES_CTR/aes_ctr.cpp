@@ -62,7 +62,6 @@ void KeyExpansion(u8 key[], u32 key_schedule[])
 		i++;
 	}
 }
-#endif
 
 void aes_load_iv(cipher_state *cs, u32 *iv)
 {
