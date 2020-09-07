@@ -12,10 +12,9 @@
 
 #include <cstring>
 
-#if __ARM_NEON
-#include <arm_acle.h>
-#include <arm_neon.h>
-/* Advanced SIMD intrinsics are now available */
+#ifdef x86_INTRINSICS
+#include <x86intrin.h>
+/* Advanced SSE3 / AES intrinsics for x86 now available  */
 #endif
 
 // Magic constants
@@ -99,28 +98,28 @@ inline void round(u32 *a, u32 *b, u32 *c, u32 *d, u32 *round_key)
 inline void aegis_state_update(aegis_state *cs, u32 *message_block)
 {
 
-#ifdef ARM_INTRINSICS
-	uint8x16_t B_TMP;
-	uint8x16_t B_MSG;
-	uint8x16_t B_KEY;
-	uint8x16_t B_S0;
-	uint8x16_t B_S1;
-	uint8x16_t B_S2;
-	uint8x16_t B_S3;
-	uint8x16_t B_S4;
+#ifdef x86_INTRINSICS
+	__m128i B_TMP;
+	__m128i B_MSG;
+	__m128i B_KEY;
+	__m128i B_S0;
+	__m128i B_S1;
+	__m128i B_S2;
+	__m128i B_S3;
+	__m128i B_S4;
 #else
 	u32 tmp[4];
 	u32 tmp_key[4];
 	u32 tmp_state[4];
 #endif
 
-#ifdef ARM_INTRINSICS
+#ifdef x86_INTRINSICS
 	// UPDATE FIRST REGISTER //
 	// Store s0 as tmp var.
-	B_TMP = vld1q_u8((u8*)cs->s0);
-	B_MSG = vld1q_u8((u8*)message_block);
-	B_KEY = veorq_u8(B_TMP, B_MSG);
-	B_S0 = vld1q_u8((u8*)cs->s4);
+	B_TMP = _mm_loadu_si128((__m128i*)cs->s0);
+	B_MSG = _mm_loadu_si128((__m128i*)message_block);
+	B_KEY = _mm_xor_si128(B_TMP, B_MSG);
+	B_S0 = _mm_loadu_si128((__m128i*)cs->s4);
 #else
 	std::memcpy(tmp_state, cs->s0, 16);
 	// XOR msg and old s0 as tmp key.
@@ -132,15 +131,9 @@ inline void aegis_state_update(aegis_state *cs, u32 *message_block)
 	std::memcpy(cs->s0, cs->s4, 16);
 #endif
 	// Iterate round
-#ifdef ARM_INTRINSICS
-	// ARM INSTRINSICS
-	
-	B_S0 = veorq_u8(B_S0, B_KEY);
-	//vst1q_u8((u8*)cs->s2, B);
-	//B = vaeseq_u8(B, Key);
-	B_S0 = vaesmcq_u8(vaeseq_u8(B_S0, B_KEY));
-	B_S0 = veorq_u8(B_S0, B_KEY);
-	vst1q_u8((u8*)cs->s0, B_S0);
+#ifdef x86_INTRINSICS
+	B_S0 = _mm_aesenc_si128 (B_S0, B_KEY);	
+	_mm_storeu_si128 ((__m128i*)cs->s0, B_S0);
 #else	
 	round(cs->s0, cs->s0+1, cs->s0+2, cs->s0+3, tmp_key);
 #endif
@@ -149,24 +142,18 @@ inline void aegis_state_update(aegis_state *cs, u32 *message_block)
 
 	// UPDATE SECOND REGISTER //
 	// Store s1 as round key
-#ifdef ARM_INTRINSICS
-	B_KEY = vld1q_u8((u8*)cs->s1);
+#ifdef x86_INTRINSICS
+	B_KEY = _mm_loadu_si128((__m128i*)cs->s1);
 	B_S1 = B_TMP;
 #else
 	std::memcpy(tmp_key, cs->s1, 16);
 	// Copy old s0 into s1 state.
 	std::memcpy(cs->s1, tmp_state, 16);
 #endif
-#ifdef ARM_INTRINSICS
-	// ARM INSTRINSICS
-	
-	B_S1 = veorq_u8(B_S1, B_KEY);
-	//vst1q_u8((u8*)cs->s2, B);
-	//B = vaeseq_u8(B, Key);
-	B_S1 = vaesmcq_u8(vaeseq_u8(B_S1, B_KEY));
-	B_S1 = veorq_u8(B_S1, B_KEY);
+#ifdef x86_INTRINSICS
+	B_S1 = _mm_aesenc_si128 (B_S1, B_KEY);	
 	B_TMP = B_KEY;
-	vst1q_u8((u8*)cs->s1, B_S1);
+	_mm_storeu_si128 ((__m128i*)cs->s1, B_S1);
 #else	
 	round(cs->s1, cs->s1+1, cs->s1+2, cs->s1+3, tmp_key);
 	// Iterate round
@@ -176,8 +163,8 @@ inline void aegis_state_update(aegis_state *cs, u32 *message_block)
 #endif
 	// UPDATE THIRD REGISTER //
 	// Store s2 as round key
-#ifdef ARM_INTRINSICS
-	B_KEY = vld1q_u8((u8*)cs->s2);
+#ifdef x86_INTRINSICS
+	B_KEY = _mm_loadu_si128((__m128i*)cs->s2);
 	B_S2 = B_TMP;
 #else
 	std::memcpy(tmp_key, cs->s2, 16);
@@ -185,15 +172,10 @@ inline void aegis_state_update(aegis_state *cs, u32 *message_block)
 	std::memcpy(cs->s2, tmp_state, 16);
 #endif
 	// Iterate round
-#ifdef ARM_INTRINSICS
-	// ARM INSTRINSICS
-	B_S2 = veorq_u8(B_S2, B_KEY);
-	//vst1q_u8((u8*)cs->s2, B);
-	//B = vaeseq_u8(B, Key);
-	B_S2 = vaesmcq_u8(vaeseq_u8(B_S2, B_KEY));
-	B_S2 = veorq_u8(B_S2, B_KEY);
+#ifdef x86_INTRINSICS
+	B_S2 = _mm_aesenc_si128(B_S2, B_KEY);
 	B_TMP = B_KEY;
-	vst1q_u8((u8*)cs->s2, B_S2);
+	_mm_storeu_si128 ((__m128i*)cs->s2, B_S2);
 #else	
 	round(cs->s2, cs->s2+1, cs->s2+2, cs->s2+3, tmp_key);
 	// Copy old s2 into temp state
@@ -201,8 +183,8 @@ inline void aegis_state_update(aegis_state *cs, u32 *message_block)
 #endif
 	// UPDATE FOURTH REGISTER //
 	// Store s3 as round key
-#ifdef ARM_INTRINSICS
-	B_KEY = vld1q_u8((u8*)cs->s3);
+#ifdef x86_INTRINSICS
+	B_KEY = _mm_loadu_si128 ((__m128i*)cs->s3);
 	B_S3 = B_TMP;
 #else
 	std::memcpy(tmp_key, cs->s3, 16);
@@ -210,15 +192,10 @@ inline void aegis_state_update(aegis_state *cs, u32 *message_block)
 	std::memcpy(cs->s3, tmp_state, 16);
 #endif
 	// Iterate round
-#ifdef ARM_INTRINSICS
-	// ARM INSTRINSICS	
-	B_S3 = veorq_u8(B_S3, B_KEY);
-	//vst1q_u8((u8*)cs->s2, B);
-	//B = vaeseq_u8(B, Key);
-	B_S3 = vaesmcq_u8(vaeseq_u8(B_S3, B_KEY));
-	B_S3 = veorq_u8(B_S3, B_KEY);
+#ifdef x86_INTRINSICS
+	B_S3 = _mm_aesenc_si128 (B_S3, B_KEY);
 	B_TMP = B_KEY;
-	vst1q_u8((u8*)cs->s3, B_S3);
+	_mm_storeu_si128 ((__m128i*)cs->s3, B_S3);
 #else	
 	// Regular table driven
 	round(cs->s3, cs->s3+1, cs->s3+2, cs->s3+3, tmp_key);
@@ -230,8 +207,8 @@ inline void aegis_state_update(aegis_state *cs, u32 *message_block)
 
 	// UPDATE FIFTH REGISTER //
 	// Store s4 as round key
-#ifdef ARM_INTRINSICS
-	B_KEY = vld1q_u8((u8*)cs->s4);
+#ifdef x86_INTRINSICS
+	B_KEY = _mm_loadu_si128((__m128i*)cs->s4);
 	B_S4 = B_TMP;
 #else
 	std::memcpy(tmp_key, cs->s4, 16);
@@ -239,14 +216,9 @@ inline void aegis_state_update(aegis_state *cs, u32 *message_block)
 	std::memcpy(cs->s4, tmp_state, 16);
 #endif
 	// Iterate round
-#ifdef ARM_INTRINSICS
-	// ARM INTRINSICS
-	B_S4 = veorq_u8(B_S4, B_KEY);
-	//vst1q_u8((u8*)cs->s2, B);
-	//B = vaeseq_u8(B, Key);
-	B_S4 = vaesmcq_u8(vaeseq_u8(B_S4, B_KEY));
-	B_S4 = veorq_u8(B_S4, B_KEY);
-	vst1q_u8((u8*)cs->s4, B_S4);
+#ifdef x86_INTRINSICS
+	B_S4 = _mm_aesenc_si128(B_S4, B_KEY);
+	_mm_storeu_si128((__m128i*)cs->s4, B_S4);
 #else	
 	round(cs->s4, cs->s4+1, cs->s4+2, cs->s4+3, tmp_key);
 #endif
