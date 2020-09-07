@@ -2,13 +2,18 @@
 // This implementation was been  //
 // placed in the public domain by//
 //                               //
-// Petter Solnoer - 31/03/2020   //
+// Petter Solnoer - 26/08/2020   //
 ///////////////////////////////////
 
 #include <iostream>
 #include <fstream>
 #include "aes_cfb.h"
 #include <string>
+
+#ifdef x86_INTRINSICS
+#include <x86intrin.h>
+/* Advanced SSE3 / AES intrinsics for x86 now available */
+#endif
 
 u32 RotByte(u32 word)
 {
@@ -65,6 +70,35 @@ void cfb_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv)
 
 void aes_encrypt(cipher_state *cs, u32 keystream[])
 {
+#ifdef x86_INTRINSICS
+	__m128i B_S = _mm_loadu_si128 ((__m128i*)&cs->reg1);
+	__m128i B_K0 = _mm_loadu_si128 ((__m128i*)&cs->rk);
+	__m128i B_K1 = _mm_loadu_si128 ((__m128i*)&cs->rk[4]);
+	__m128i B_K2 = _mm_loadu_si128 ((__m128i*)&cs->rk[8]);
+	__m128i B_K3 = _mm_loadu_si128 ((__m128i*)&cs->rk[12]);
+	__m128i B_K4 = _mm_loadu_si128 ((__m128i*)&cs->rk[16]);
+	__m128i B_K5 = _mm_loadu_si128 ((__m128i*)&cs->rk[20]);
+	__m128i B_K6 = _mm_loadu_si128 ((__m128i*)&cs->rk[24]);
+	__m128i B_K7 = _mm_loadu_si128 ((__m128i*)&cs->rk[28]);
+	__m128i B_K8 = _mm_loadu_si128 ((__m128i*)&cs->rk[32]);
+	__m128i B_K9 = _mm_loadu_si128 ((__m128i*)&cs->rk[36]);
+	__m128i B_K10 = _mm_loadu_si128 ((__m128i*)&cs->rk[40]);
+
+	B_S = _mm_xor_si128 (B_S, B_K0);
+	B_S = _mm_aesenc_si128 (B_S, B_K1);
+	B_S = _mm_aesenc_si128 (B_S, B_K2);
+	B_S = _mm_aesenc_si128 (B_S, B_K3);
+	B_S = _mm_aesenc_si128 (B_S, B_K4);
+	B_S = _mm_aesenc_si128 (B_S, B_K5);
+	B_S = _mm_aesenc_si128 (B_S, B_K6);
+	B_S = _mm_aesenc_si128 (B_S, B_K7);
+	B_S = _mm_aesenc_si128 (B_S, B_K8);
+	B_S = _mm_aesenc_si128 (B_S, B_K9);
+	B_S = _mm_aesenclast_si128 (B_S, B_K10);
+
+	_mm_storeu_si128 ((__m128i*)keystream, B_S);
+
+#else
 	initial_round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[0]));
 	#ifndef ROUND_REDUCED
 	round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[4]));
@@ -80,6 +114,7 @@ void aes_encrypt(cipher_state *cs, u32 keystream[])
 	final_round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[40]));
 	keystream[0] = cs->reg1; keystream[1] = cs->reg2;
 	keystream[2] = cs->reg3; keystream[3] = cs->reg4;
+#endif
 }
 
 void full_state_update(cipher_state *cs, u32 *ctxt)

@@ -2,11 +2,11 @@
 // This implementation was been  //
 // placed in the public domain by//
 //                               //
-// Petter Solnoer - 31/03/2020   //
+// Petter Solnoer - 07/09/2020   //
 ///////////////////////////////////
 
-#ifndef AES_CFB
-#define AES_CFB
+#ifndef AES_CTR
+#define AES_CTR
 
 #include "tables.h"
 // define modes
@@ -33,8 +33,8 @@ struct cipher_state{
 // The interface consist of
 // cipher initialization
 // and process packet.
-void cfb_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv);
-void cfb_process_packet(cipher_state *cs, u8 *out, u8 *in, int size, int mode);
+void ctr_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv);
+void ctr_process_packet(cipher_state *cs, u8 *out, u8 *in, int size, int mode);
 
 // the encryption mode of the cipher 
 // and the key expansion can be accessed
