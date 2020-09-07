@@ -11,6 +11,12 @@
 #include "aes_ctr.h"
 #include <string>
 
+#if __ARM_NEON
+#include <arm_acle.h>
+#include <arm_neon.h>
+/* Advanced SIMD intrinsics are now available  */
+#endif
+
 #ifdef DEBUG
 #include "../../HexEncoder/encoder.h"
 #endif
@@ -56,6 +62,7 @@ void KeyExpansion(u8 key[], u32 key_schedule[])
 		i++;
 	}
 }
+#endif
 
 void aes_load_iv(cipher_state *cs, u32 *iv)
 {
@@ -76,6 +83,35 @@ void ctr_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv)
 
 void aes_encrypt(cipher_state *cs, u32 keystream[])
 {
+#ifdef ARM_INTRINSICS
+        uint8x16_t B_S = vld1q_u8((u8*)&cs->reg1);
+        uint8x16_t B_K0 = vld1q_u8((u8*)cs->rk);
+        uint8x16_t B_K1 = vld1q_u8((u8*)&cs->rk[4]);
+        uint8x16_t B_K2 = vld1q_u8((u8*)&cs->rk[8]);
+        uint8x16_t B_K3 = vld1q_u8((u8*)&cs->rk[12]);
+        uint8x16_t B_K4 = vld1q_u8((u8*)&cs->rk[16]);
+        uint8x16_t B_K5 = vld1q_u8((u8*)&cs->rk[20]);
+        uint8x16_t B_K6 = vld1q_u8((u8*)&cs->rk[24]);
+        uint8x16_t B_K7 = vld1q_u8((u8*)&cs->rk[28]);
+        uint8x16_t B_K8 = vld1q_u8((u8*)&cs->rk[32]);
+        uint8x16_t B_K9 = vld1q_u8((u8*)&cs->rk[36]);
+        uint8x16_t B_K10 = vld1q_u8((u8*)&cs->rk[40]);
+
+        B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K0));
+        B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K1));
+        B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K2));
+        B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K3));
+        B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K4));
+        B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K5));
+        B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K6));
+        B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K7));
+        B_S = vaesmcq_u8(vaeseq_u8(B_S, B_K8));
+        B_S = vaeseq_u8(B_S, B_K9);
+        B_S = veorq_u8(B_S, B_K10);
+
+        vst1q_u8((u8*)keystream, B_S);
+#else
+
 	// Save the state
 	u32 state[4];
 	std::memcpy(state, &cs->reg1, 16);
@@ -98,6 +134,7 @@ void aes_encrypt(cipher_state *cs, u32 keystream[])
 
 	// Set state
 	std::memcpy(&(cs->reg1), state, 16);
+#endif
 }
 
 void state_update(cipher_state *cs)
