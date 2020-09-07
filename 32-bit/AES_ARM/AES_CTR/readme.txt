@@ -12,9 +12,9 @@ as follows:
 
 g++ test_vectors.cpp aes_ctr.cpp ../../HexEncoder/encoder.cpp -o test_vectors
 
-To compile using x86 intrinsics (Hardware acceleration), use the following command:
+To compile using ARM-v8-A Crypto intrinsics (Hardware acceleration), use the following command:
 
-g++ test_vectors.cpp aes_ctr.cpp ../../HexEncoder/encoder.cpp -o test_vectors -D x86_INTRINSICS -march=native
+g++ test_vectors.cpp aes_ctr.cpp ../../HexEncoder/encoder.cpp -o test_vectors -D ARM_INTRINSICS -march=armv8-a+crypto
 
 Run program using: ./test_vectors
 
