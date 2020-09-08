@@ -30,7 +30,7 @@ as follows:
 
 FULL VERSION:
 
-g++ main.cpp aes_cfb.cpp -o main -march=armv8-a+crypto -D ARM_INTRINSICS
+g++ main.cpp aes_cfb.cpp -o main -D x86_INTRINSICS -march=native
 
 The implementation has been verified
 using test vectors from the official

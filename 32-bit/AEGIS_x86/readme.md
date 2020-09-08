@@ -10,13 +10,13 @@ system.
 
 Compile test_vectors using:
 
-g++ test_vectors.cpp aegis_128.cpp ../HexEncoder/encoder.cpp -o test_vectors -march=armv8-a+crypto -D ARM_INTRINSICS
+g++ test_vectors.cpp aegis_128.cpp ../HexEncoder/encoder.cpp -o test_vectors -D x86_INTRINSICS -march=native
 
 Run test_vectors using ./test_vectors
 
 Compile sample_program using:
 
-g++ main.cpp aegis_128.cpp ../HexEncoder/encoder.cpp -o main test_vectors -march=armv8-a+crypto -D ARM_INTRINSICS
+g++ main.cpp aegis_128.cpp ../HexEncoder/encoder.cpp -o main test_vectors -D x86_INTRINSICS -march=native
 
 Run sample program using ./main
 
