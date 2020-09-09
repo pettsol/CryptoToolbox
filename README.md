@@ -11,7 +11,7 @@ Solnør, P. (2020), ‘CryptoToolbox’,https://github.com/pettsol/CryptoToolbox
 
 bibtex entry:
 
-@misc{cryptotoolbox, <\br>
+@misc{cryptotoolbox,
   title={Crypto{T}oolbox},
   author={Petter Soln{\o}r},
   year={2020},
