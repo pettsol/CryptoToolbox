@@ -5,6 +5,19 @@ cryptographical algorithms. All implementations have
 been verified by official test vectors, and are provided
 as-is.
 
+Please cite the repository as:
+
+Solnør, P. (2020), ‘CryptoToolbox’,https://github.com/pettsol/CryptoToolbox.
+
+bibtex entry:
+
+@misc{cryptotoolbox,
+  title={Crypto{T}oolbox},
+  author={Petter Soln{\o}r},
+  year={2020},
+  howpublished={\url{https://github.com/pettsol/CryptoToolbox}}
+}
+
 All algorithms take a pointer to an input buffer
 and a pointer to an output buffer. It is the users task
 to serialize the data into the input buffers, and
