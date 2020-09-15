@@ -17,7 +17,7 @@ int main()
 	u8 key[key_string.size()/2];
 	u8 iv[iv_string.size()/2];
 
-	hex2stringString(key, key_string.data(), key_string.size());
+	hex_decode(key, key_string.data(), key_string.size());
 
 	print_key((u32*)key);
 
@@ -25,7 +25,7 @@ int main()
 	// Swap bytes
 //	byte_swap(key, key, key_string.size()/2);
 
-	hex2stringString(iv, iv_string.data(), iv_string.size());
+	hex_decode(iv, iv_string.data(), iv_string.size());
 
 	rabbit_state cs;
 

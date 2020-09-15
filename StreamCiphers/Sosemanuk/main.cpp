@@ -12,7 +12,7 @@ int main()
 	std::cout << "Key length: " << keyString.size() << std::endl;
 	
 	u8 key[keyString.size()/2];
-	hex2stringString(key, keyString.data(), keyString.size());
+	hex_decode(key, keyString.data(), keyString.size());
 
 	// Hex IV string
 	std::string ivString = "D404755728FC17C659EC49D577A746E2";
@@ -20,7 +20,7 @@ int main()
 	std::cout << "IV length: " << ivString.size() << std::endl;
 
 	u8 iv[ivString.size()/2];
-	hex2stringString(iv, ivString.data(), ivString.size());
+	hex_decode(iv, ivString.data(), ivString.size());
 
 	// Hex test vector plaintext
 	//std::string plainString = "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
@@ -48,7 +48,7 @@ int main()
 	sosemanuk_process_packet( &e_cs, cipher, (u8*)plain.data(), plain.size() );
 
 	char hexCt[2*plain.size()+1];
-	string2hexString(hexCt, cipher, plain.size());
+	hex_encode(hexCt, cipher, plain.size());
 	std::string hexCtString(hexCt, 2*plain.size());
 	std::cout << "Ciphertext: " << hexCtString << std::endl;
 

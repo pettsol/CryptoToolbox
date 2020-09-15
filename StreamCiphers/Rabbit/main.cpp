@@ -15,8 +15,8 @@ int main()
 	u8 key[key_string.size()/2];
 	u8 iv[iv_string.size()/2];
 
-	hex2stringString(key, key_string.data(), key_string.size());
-	hex2stringString(iv, iv_string.data(), iv_string.size());
+	hex_decode(key, key_string.data(), key_string.size());
+	hex_decode(iv, iv_string.data(), iv_string.size());
 
 	rabbit_state cs;
 
@@ -47,7 +47,7 @@ int main()
 
 	char ct_hex[2*plaintext.size()+1];
 
-	string2hexString(ct_hex, ct, plaintext.size());
+	hex_encode(ct_hex, ct, plaintext.size());
 
 	std::string ct_s(ct_hex);
 

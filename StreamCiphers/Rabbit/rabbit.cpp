@@ -1,5 +1,8 @@
 #include "rabbit.h"
+
+#ifdef DEBUG
 #include "../../Encoders/Hex/encoder.h"
+#endif
 
 #include <iostream>
 #include <cstring>
@@ -44,8 +47,8 @@ void rabbit_key_setup(rabbit_state *cs, u32 key[4])
 			char first_c[5];
 			char second_c[5];
 
-			string2hexString(first_c, (u8*)&key_ptr[(j+1) & 0x7], 2);
-			string2hexString(second_c, (u8*)&key_ptr[j], 2);
+			hex_encode(first_c, (u8*)&key_ptr[(j+1) & 0x7], 2);
+			hex_encode(second_c, (u8*)&key_ptr[j], 2);
 
 			std::string first_s(first_c);
 			std::string second_s(second_c);
@@ -55,7 +58,7 @@ void rabbit_key_setup(rabbit_state *cs, u32 key[4])
 			cs->X[j] = (u32)( (u32)key_ptr[(j+1) & 0x7] << 16 | (u32)key_ptr[j] );
 #ifdef DEBUG
 			char print_c[9];
-			string2hexString(print_c, (u8*)&cs->X[j], 4);
+			hex_encode(print_c, (u8*)&cs->X[j], 4);
 			std::string print_s(print_c);
 			std::cout << "X[" << j << "] = " << print_s << std::endl;
 #endif
@@ -199,7 +202,7 @@ void print_key(u32 key[4])
 	{
 		char key_s[5];
 
-		string2hexString(key_s, (u8*)(key_ptr+i), 2);
+		hex_encode(key_s, (u8*)(key_ptr+i), 2);
 
 		std::string key_string(key_s);
 
@@ -224,7 +227,7 @@ void print_inner_state(rabbit_state *cs)
 		
 		// Convert to hex
 		char tmp_c[9];
-		string2hexString(tmp_c, tmp, 4);
+		hex_encode(tmp_c, tmp, 4);
 
 		// Print
 		std::string tmp_s(tmp_c);
@@ -242,7 +245,7 @@ void print_inner_state(rabbit_state *cs)
 
 		// Convert to hex
 		char tmp_c[9];
-		string2hexString(tmp_c, tmp, 4);
+		hex_encode(tmp_c, tmp, 4);
 
 		// Print
 		std::string tmp_s(tmp_c);

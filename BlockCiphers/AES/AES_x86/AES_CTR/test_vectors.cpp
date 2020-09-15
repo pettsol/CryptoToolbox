@@ -104,7 +104,7 @@ int main()
 	ctr_initialize_cipher(&e_cs, key_1, (u32*)iv_1);
 	ctr_process_packet(&e_cs, tmp_1, test_vector_1, 16, ENCRYPT);
 	char hex_tmp_1[33];
-	string2hexString(hex_tmp_1, tmp_1, 16);
+	hex_encode(hex_tmp_1, tmp_1, 16);
 	std::string print_tmp_1(hex_tmp_1, 33);
 	std::cout << "Output 1: " << print_tmp_1 << std::endl;
 
@@ -124,7 +124,7 @@ int main()
 	ctr_initialize_cipher(&e_cs, key_2, (u32*)iv_2);
 	ctr_process_packet(&e_cs, tmp_2, test_vector_2, 32, ENCRYPT);
 	char hex_tmp_2[65];
-	string2hexString(hex_tmp_2, tmp_2, 32);
+	hex_encode(hex_tmp_2, tmp_2, 32);
 	std::string print_tmp_2(hex_tmp_2, 65);
 	std::cout << "Output 2: " << print_tmp_2 << std::endl;
 
@@ -143,7 +143,7 @@ int main()
 	ctr_initialize_cipher(&e_cs, key_3, (u32*)iv_3);
 	ctr_process_packet(&e_cs, tmp_3, test_vector_3, 36, ENCRYPT);
 	char hex_tmp_3[73];
-	string2hexString(hex_tmp_3, tmp_3, 36);
+	hex_encode(hex_tmp_3, tmp_3, 36);
 	std::string print_tmp_3(hex_tmp_3, 73);
 	std::cout << "Output 3: " << print_tmp_3 << std::endl;
 

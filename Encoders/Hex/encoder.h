@@ -9,7 +9,7 @@
 #ifndef ENCODER_H
 #define ENCODER_H
 
-void string2hexString(char* output, const unsigned char* input, int size);
-void hex2stringString(unsigned char* output, const char* input, int size);
+void hex_encode(char* output, const unsigned char* input, int size);
+void hex_decode(unsigned char* output, const char* input, int size);
 
 #endif

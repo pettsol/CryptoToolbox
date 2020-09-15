@@ -35,10 +35,10 @@ B2C2D2E2F303132333435363738393A3B3C3D3E3F4041424344454647484\
 F72206B65796C656E3D626C6F636B6C656E"; 
 
 	u8 message[msg.size()/2];
-	hex2stringString(message, msg.data(), msg.size());
+	hex_decode(message, msg.data(), msg.size());
 
 	u8 key[keystring.size()/2];
-	hex2stringString(key, keystring.data(), keystring.size());
+	hex_decode(key, keystring.data(), keystring.size());
 
 	hmac_load_key(&hs, key, keystring.size()/2);
 
@@ -48,12 +48,12 @@ F72206B65796C656E3D626C6F636B6C656E";
 	tag_generation(&hs, tag, message, msg.size()/2, 16);
 
 	char hex_tag[33];
-	string2hexString(hex_tag, tag, 16);
+	hex_encode(hex_tag, tag, 16);
 	std::string hex_string(hex_tag, 32);
 	std::cout << "Hex tag: " << hex_string << std::endl;
 
 	u8 expected_tag[16];
-	hex2stringString(expected_tag, ExpectedTag.data(), 32);
+	hex_decode(expected_tag, ExpectedTag.data(), 32);
 
 	if ( tag_validation(&hs, tag, message, msg.size()/2, 16))
 	{ 

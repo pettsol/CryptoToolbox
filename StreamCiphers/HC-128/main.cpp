@@ -29,10 +29,10 @@ int main()
 	std::string hexIv = "288FF65DC42B92F960C72E95FC63CA31";
 
 	u32 key[4];
-	hex2stringString((u8*)key, hexkey.data(), 32);
+	hex_decode((u8*)key, hexkey.data(), 32);
 
 	u32 iv[4];
-	hex2stringString((u8*)iv, hexIv.data(), 32);
+	hex_decode((u8*)iv, hexIv.data(), 32);
 
 	// This segment performs the encryption	
 	hc128_state e_cs;

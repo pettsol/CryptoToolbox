@@ -19,8 +19,8 @@ int main()
 	u8 nonce[12];
 
 	// Convert hex key and nonce to u8
-	hex2stringString(key, key_string.data(), key_string.size());
-	hex2stringString(nonce, nonce_string.data(), nonce_string.size());
+	hex_decode(key, key_string.data(), key_string.size());
+	hex_decode(nonce, nonce_string.data(), nonce_string.size());
 
 	// Initialize the cipher to encrypt
 	chacha_state e_cs;
@@ -34,7 +34,7 @@ int main()
 
 	// Print the hex encoding of the ciphertext
 	char hex_ciphertext[2*message.size()+1];
-	string2hexString(hex_ciphertext, ciphertext, message.size());
+	hex_encode(hex_ciphertext, ciphertext, message.size());
 	std::string print_ciphertext(hex_ciphertext);
 	std::cout << "Ciphertext: " << print_ciphertext << std::endl;
 

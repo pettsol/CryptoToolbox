@@ -13,13 +13,13 @@ int main()
 	std::cout << "Key length: " << keyString.size() << std::endl;
 	
 	u8 key[32];
-	hex2stringString(key, keyString.data(), keyString.size());
+	hex_decode(key, keyString.data(), keyString.size());
 
 	// Hex test vector plaintext
 	std::string plainString = "11010101010101010101010101010101";
 	
 	u8 plain[16];
-	hex2stringString(plain, plainString.data(), plainString.size());
+	hex_decode(plain, plainString.data(), plainString.size());
 
 	serpent_state e_cs; std::memset(&e_cs, 0, sizeof(e_cs));
 
@@ -33,11 +33,11 @@ int main()
 
 #ifdef SOSEMANUK_H
 	char hexCt[97];
-	string2hexString(hexCt, cipher, 48);
+	hex_encode(hexCt, cipher, 48);
 	std::string hexCtString(hexCt, 96);
 #else
 	char hexCt[33];
-	string2hexString(hexCt, cipher, 16);
+	hex_encode(hexCt, cipher, 16);
 	std::string hexCtString(hexCt, 32);
 #endif
 	std::cout << "Ciphertext: " << hexCtString << std::endl;

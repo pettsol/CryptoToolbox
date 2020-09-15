@@ -23,7 +23,7 @@ int main()
 
 	char hex_digest[33];
 
-	string2hexString(hex_digest, digest, 16);
+	hex_encode(hex_digest, digest, 16);
 
 	std::string hex_string(hex_digest);
 

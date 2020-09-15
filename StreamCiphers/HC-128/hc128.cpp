@@ -7,7 +7,6 @@
 ///////////////////////////////////////
 
 #include "hc128.h"
-#include "../../Encoders/Hex/encoder.h"
 
 #include <iostream>
 #include <cstring>
@@ -22,9 +21,9 @@ void hc128_initialize(hc128_state *cs, u32 key[4], u32 iv[4])
 	std::memcpy(W, key, 16); std::memcpy(&(W[4]), key, 16);
 	std::memcpy(&(W[8]), iv, 16); std::memcpy(&(W[12]), iv, 16);
 
-	char hexKey[33];
-	string2hexString(hexKey, (u8*)key, 16);
-	std::string printKey(hexKey, 32);
+//	char hexKey[33];
+//	string2hexString(hexKey, (u8*)key, 16);
+//	std::string printKey(hexKey, 32);
 
 	for (int i = 16; i < 1280; i++)
 	{

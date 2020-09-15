@@ -8,7 +8,7 @@ int main()
 
 	u8 key[8];
 
-	hex2stringString(key, key_string.data(), 16);
+	hex_decode(key, key_string.data(), 16);
 
 	des_state e_cs;
 
@@ -26,7 +26,7 @@ int main()
 
 	char hex_ct[65];
 
-	string2hexString(hex_ct, ct, 32);
+	hex_encode(hex_ct, ct, 32);
 
 	std::string hex_ct_string(hex_ct);
 

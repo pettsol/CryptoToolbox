@@ -11,7 +11,7 @@ int main()
 	u8 test_state_bytes[test_state.size()/2];
 
 	// Convert to u8 bytes
-	hex2stringString(test_state_bytes, test_state.data(), test_state.size());
+	hex_decode(test_state_bytes, test_state.data(), test_state.size());
 
 	// Swap to little endian byte order
 	byte_swap(test_state_bytes, test_state_bytes, test_state.size()/2);
@@ -30,7 +30,7 @@ int main()
 
 	// Convert to hex
 	char hex_keystream[test_state.size()+1];
-	string2hexString(hex_keystream, keystream, 64);
+	hex_encode(hex_keystream, keystream, 64);
 
 	// Print
 	std::string print_hex(hex_keystream);

@@ -10,7 +10,8 @@
 #include "encoder.h"
 #include <iostream>
 #include <string>
-void string2hexString(char* output, const unsigned char* input, int size)
+
+void hex_encode(char* output, const unsigned char* input, int size)
 {
 	int loop;
 	int i;
@@ -44,7 +45,7 @@ int hex_to_ascii(unsigned char c, unsigned char d)
 	return high+low;
 }
 
-void hex2stringString(unsigned char* output, const char* input, int size)
+void hex_decode(unsigned char* output, const char* input, int size)
 {
 	int loop = 0;
 	unsigned char buf = 0;

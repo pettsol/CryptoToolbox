@@ -68,7 +68,7 @@ int main()
 
 	// Print the entire message:
 	char hexMsgChar[2*(plaintext.size() + TAGSIZE)+1];
-	string2hexString(hexMsgChar, msg, plaintext.size()+TAGSIZE);
+	hex_encode(hexMsgChar, msg, plaintext.size()+TAGSIZE);
 	std::string hexMsg(hexMsgChar, 2*(plaintext.size()+TAGSIZE));
 	std::cout << "Msg: " << hexMsg << std::endl;
 
@@ -123,7 +123,7 @@ int main()
 	// Print contents of msg2:
 	
 	char hexMsg2Char[2*(HC128_IV_SIZE+plaintext2.size()+TAGSIZE)+1];
-	string2hexString(hexMsg2Char, msg2, HC128_IV_SIZE+plaintext2.size()+TAGSIZE);
+	hex_encode(hexMsg2Char, msg2, HC128_IV_SIZE+plaintext2.size()+TAGSIZE);
 	std::string hexMsg2(hexMsg2Char, 2*(HC128_IV_SIZE+plaintext2.size()+TAGSIZE));
 	std::cout << "Msg2: " << hexMsg2 << std::endl;
 

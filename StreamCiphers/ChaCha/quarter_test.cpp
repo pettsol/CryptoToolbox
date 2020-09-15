@@ -16,7 +16,7 @@ int main()
 	std::string HexIn = "DABF9879";
 	//std::string HexIn = "BFDA7998";
 	u8 in[4];
-       	hex2stringString(in, HexIn.data(), 8);
+       	hex_decode(in, HexIn.data(), 8);
 
 	u32 w_in[2];
 	std::memcpy(w_in, in, 4);
@@ -24,7 +24,7 @@ int main()
 	u32 in_rot = ROTL_32(w_in[0], 7);
 
 	char HexOut[9];
-	string2hexString(HexOut, (u8*)&in_rot, 4);
+	hex_encode(HexOut, (u8*)&in_rot, 4);
 
 	std::string printString(HexOut);
 	std::cout << "Rot: " << printString << std::endl;
@@ -39,7 +39,7 @@ int main()
 
 	u8 input[hexInput.size()/2];
 	u8 output[hexInput.size()/2];
-	hex2stringString(input, hexInput.data(), hexInput.size());
+	hex_decode(input, hexInput.data(), hexInput.size());
 	// Swap byte order of input
 	byte_swap(input, input, hexInput.size()/2);
 	
@@ -51,7 +51,7 @@ int main()
 	
 	//
 	char hexOutput[hexInput.size()+1];
-	string2hexString(hexOutput, output, hexInput.size()/2);
+	hex_encode(hexOutput, output, hexInput.size()/2);
 	std::string print(hexOutput);
 
 	std::cout << "Output: " << print << std::endl;

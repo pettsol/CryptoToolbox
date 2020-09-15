@@ -54,7 +54,7 @@ int main()
 	std::cout << "Hex PT: " << hexPT << std::endl;
 */
 	char hexCT[2*pt_length+1];
-	string2hexString(hexCT, ct, pt_length);
+	hex_encode(hexCT, ct, pt_length);
 	std::string hexString(hexCT, 2*pt_length+1);
 	std::cout << "Hex CT: " << hexString << std::endl;
 

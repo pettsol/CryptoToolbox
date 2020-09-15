@@ -41,24 +41,24 @@ int main()
 	std::cout << "Valid tag\n";
 
 	char PT_1[33];
-	string2hexString(PT_1, pt_1, 16);
+	hex_encode(PT_1, pt_1, 16);
 	std::string hexPT_1(PT_1, 33);
 	std::cout << "PT: " << hexPT_1 << std::endl;
 
 	char hexCT_1[33];
-	string2hexString(hexCT_1, ct_1, 16);
+	hex_encode(hexCT_1, ct_1, 16);
 	std::string hexString_1(hexCT_1, 33);
 	std::cout << "Expected CT: " << expected_ct_1 << std::endl;
 	std::cout << "Computed CT: " << hexString_1 << std::endl;
 
 	char hexTAG_1[33];
-	string2hexString(hexTAG_1, tag_1, 16);
+	hex_encode(hexTAG_1, tag_1, 16);
 	std::string hexTagString_1(hexTAG_1, 33);
 	std::cout << "Expected TAG: " << expected_tag_1 << std::endl;
 	std::cout << "Computed TAG: " << hexTagString_1 << std::endl;
 
 	char recvPT_1[33];
-	string2hexString(recvPT_1, recv_1, 16);
+	hex_encode(recvPT_1, recv_1, 16);
 	std::string hexRECV_1(recvPT_1, 33);
 	std::cout << "RECOVERED PT: " << recvPT_1 << std::endl;
 
@@ -113,24 +113,24 @@ int main()
 	std::cout << "Valid tag\n";
 
 	char PT_2[33];
-	string2hexString(PT_2, pt_2, 16);
+	hex_encode(PT_2, pt_2, 16);
 	std::string hexPT_2(PT_2, 33);
 	std::cout << "PT: " << hexPT_2 << std::endl;
 
 	char hexCT_2[33];
-	string2hexString(hexCT_2, ct_2, 16);
+	hex_encode(hexCT_2, ct_2, 16);
 	std::string hexString_2(hexCT_2, 33);
 	std::cout << "Expected CT: " << expected_ct_2 << std::endl;
 	std::cout << "Computed CT: " << hexString_2 << std::endl;
 
 	char hexTAG_2[33];
-	string2hexString(hexTAG_2, tag_2, 16);
+	hex_encode(hexTAG_2, tag_2, 16);
 	std::string hexTagString_2(hexTAG_2, 33);
 	std::cout << "Expected TAG: " << expected_tag_2 << std::endl;
 	std::cout << "Computed TAG: " << hexTagString_2 << std::endl;
 
 	char recvPT_2[33];
-	string2hexString(recvPT_2, recv_2, 16);
+	hex_encode(recvPT_2, recv_2, 16);
 	std::string hexRECV_2(recvPT_2, 33);
 	std::cout << "RECOVERED PT: " << recvPT_2 << std::endl;
 
@@ -187,24 +187,24 @@ int main()
 	std::cout << "Valid tag\n";
 	
 	char PT_3[33];
-	string2hexString(PT_3, pt_3, 16);
+	hex_encode(PT_3, pt_3, 16);
 	std::string hexPT_3(PT_3, 33);
 	std::cout << "PT: " << hexPT_3 << std::endl;
 
 	char hexCT_3[33];
-	string2hexString(hexCT_3, ct_3, 16);
+	hex_encode(hexCT_3, ct_3, 16);
 	std::string hexString_3(hexCT_3, 33);
 	std::cout << "Expected CT: " << expected_ct_3 << std::endl;
 	std::cout << "Computed CT: " << hexString_3 << std::endl;
 
 	char hexTAG_3[33];
-	string2hexString(hexTAG_3, tag_3, 16);
+	hex_encode(hexTAG_3, tag_3, 16);
 	std::string hexTagString_3(hexTAG_3, 33);
 	std::cout << "Expected TAG: " << expected_tag_3 << std::endl;
 	std::cout << "Computed TAG: " << hexTagString_3 << std::endl;
 
 	char recvPT_3[33];
-	string2hexString(recvPT_3, recv_3, 16);
+	hex_encode(recvPT_3, recv_3, 16);
 	std::string hexRECV_3(recvPT_3, 33);
 	std::cout << "RECOVERED PT: " << recvPT_3 << std::endl;
 
@@ -269,24 +269,24 @@ int main()
 	std::cout << "Valid tag\n";
 
 	char PT_4[65];
-	string2hexString(PT_4, pt_4, 32);
+	hex_encode(PT_4, pt_4, 32);
 	std::string hexPT_4(PT_4, 65);
 	std::cout << "PT: " << hexPT_4 << std::endl;
 
 	char hexCT_4[65];
-	string2hexString(hexCT_4, ct_4, 32);
+	hex_encode(hexCT_4, ct_4, 32);
 	std::string hexString_4(hexCT_4, 65);
 	std::cout << "Expected CT: " << expected_ct_4 << std::endl;
 	std::cout << "Computed CT: " << hexString_4 << std::endl;
 
 	char hexTAG_4[33];
-	string2hexString(hexTAG_4, tag_4, 16);
+	hex_encode(hexTAG_4, tag_4, 16);
 	std::string hexTagString_4(hexTAG_4, 33);
 	std::cout << "Expected TAG: " << expected_tag_4 << std::endl;
 	std::cout << "Computed TAG: " << hexTagString_4 << std::endl;
 
 	char recvPT_4[65];
-	string2hexString(recvPT_4, recv_4, 32);
+	hex_encode(recvPT_4, recv_4, 32);
 	std::string hexRECV_4(recvPT_4, 65);
 	std::cout << "RECOVERED PT: " << recvPT_4 << std::endl;
 

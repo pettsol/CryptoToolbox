@@ -34,7 +34,7 @@ int main()
 	std::string dig((char*)digest, 32);
 
 	char hex_representation[64];
-	string2hexString(hex_representation, (const u8*)digest, 32);
+	hex_encode(hex_representation, (const u8*)digest, 32);
 
 	std::string hex_rep(hex_representation, 64);
 
