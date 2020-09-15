@@ -212,7 +212,7 @@ void state_update(cipher_state *cs)
 		   (((tmp) << 24) & 0xff000000);
 }
 
-void ctr_process_packet(cipher_state *cs, u8 *out, u8 *in, int size, int mode)
+void ctr_process_packet(cipher_state *cs, u8 *out, u8 *in, int size)
 {
 	
 	u32 *w_ptr_in = (u32*)in;;

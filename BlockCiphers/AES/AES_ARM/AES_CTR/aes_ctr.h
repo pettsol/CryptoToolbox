@@ -9,11 +9,6 @@
 #define AES_CTR
 
 #include "tables.h"
-// define modes
-// for encryption
-// and decryption
-#define ENCRYPT 0
-#define DECRYPT 1
 
 #define AES_BLOCKSIZE 16
 
@@ -34,7 +29,7 @@ struct cipher_state{
 // cipher initialization
 // and process packet.
 void ctr_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv);
-void ctr_process_packet(cipher_state *cs, u8 *out, u8 *in, int size, int mode);
+void ctr_process_packet(cipher_state *cs, u8 *out, u8 *in, int size);
 
 // the encryption mode of the cipher 
 // and the key expansion can be accessed

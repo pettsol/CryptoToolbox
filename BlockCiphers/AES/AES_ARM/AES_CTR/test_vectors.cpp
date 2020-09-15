@@ -102,7 +102,7 @@ int main()
 
 	u8 tmp_1[16];
 	ctr_initialize_cipher(&e_cs, key_1, (u32*)iv_1);
-	ctr_process_packet(&e_cs, tmp_1, test_vector_1, 16, ENCRYPT);
+	ctr_process_packet(&e_cs, tmp_1, test_vector_1, 16);
 	char hex_tmp_1[33];
 	hex_encode(hex_tmp_1, tmp_1, 16);
 	std::string print_tmp_1(hex_tmp_1, 33);
@@ -122,7 +122,7 @@ int main()
 
 	u8 tmp_2[32];
 	ctr_initialize_cipher(&e_cs, key_2, (u32*)iv_2);
-	ctr_process_packet(&e_cs, tmp_2, test_vector_2, 32, ENCRYPT);
+	ctr_process_packet(&e_cs, tmp_2, test_vector_2, 32);
 	char hex_tmp_2[65];
 	hex_encode(hex_tmp_2, tmp_2, 32);
 	std::string print_tmp_2(hex_tmp_2, 65);
@@ -141,7 +141,7 @@ int main()
 
 	u8 tmp_3[36];
 	ctr_initialize_cipher(&e_cs, key_3, (u32*)iv_3);
-	ctr_process_packet(&e_cs, tmp_3, test_vector_3, 36, ENCRYPT);
+	ctr_process_packet(&e_cs, tmp_3, test_vector_3, 36);
 	char hex_tmp_3[73];
 	hex_encode(hex_tmp_3, tmp_3, 36);
 	std::string print_tmp_3(hex_tmp_3, 73);
