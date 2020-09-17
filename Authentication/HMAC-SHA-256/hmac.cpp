@@ -22,7 +22,7 @@
 // The HMAC may be initialized by pre-XOR'ing the key with
 // ipad / opad, saving time when packets are processed in
 // a later stage.
-void hmac_load_key(hmac_state *ctx, u8* key, int B)
+void hmac_load_key(hmac_state *cs, u8* key, int B)
 {
 	// If the key input is larger than desired, the
 	// key must be hashed to the correct size by using
@@ -49,19 +49,19 @@ void hmac_load_key(hmac_state *ctx, u8* key, int B)
 	for (int i = 0; i < HMAC_KEYLENGTH; i++)
 	{
 		// Generate inner and outer padded key
-		ctx->inner_key[i] = ipad ^ localKey[i];
-		ctx->outer_key[i] = opad ^ localKey[i];
+		cs->inner_key[i] = ipad ^ localKey[i];
+		cs->outer_key[i] = opad ^ localKey[i];
 	}
 }
 
-void tag_generation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int tagLength)
+void tag_generation(hmac_state *cs, u8 *tag, u8 *message, u64 dataLength, int tagLength)
 {
 	// Assert that datalength is strictly positive
 	if ( dataLength < 1 ) return;
 
 	// The inner key is used in the first computation along with the message
 	u8 *inner_computation = new u8[dataLength+HMAC_KEYLENGTH];
-	std::memcpy(inner_computation, ctx->inner_key, HMAC_KEYLENGTH);
+	std::memcpy(inner_computation, cs->inner_key, HMAC_KEYLENGTH);
 	std::memcpy(&(inner_computation[HMAC_KEYLENGTH]), message, dataLength);
 
 	// Compute the hash of the message and the inner key
@@ -70,7 +70,7 @@ void tag_generation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int t
 	
 	// The outer key is appended to the inner hash.
 	u8 outer_computation[DIGESTSIZE+HMAC_KEYLENGTH] = {0};
-	std::memcpy(outer_computation, ctx->outer_key, HMAC_KEYLENGTH);
+	std::memcpy(outer_computation, cs->outer_key, HMAC_KEYLENGTH);
 	std::memcpy(&(outer_computation[HMAC_KEYLENGTH]), inner_hash, DIGESTSIZE);
 
 	// Computer the final hash
@@ -85,11 +85,11 @@ void tag_generation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int t
 	delete[] inner_computation;
 }
 
-int tag_validation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int tagLength)
+int tag_validation(hmac_state *cs, u8 *tag, u8 *message, u64 dataLength, int tagLength)
 {
 	// Generate a tag from the received message
 	u8 newTag[tagLength];
-	tag_generation(ctx, newTag, message, dataLength, tagLength);
+	tag_generation(cs, newTag, message, dataLength, tagLength);
 
 	// Compare the newly generated tag with the
 	// recevied tag.

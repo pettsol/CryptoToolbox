@@ -64,8 +64,8 @@ struct hmac_state{
 static const u8 ipad = 0x36;
 static const u8 opad = 0x5c;
 
-void hmac_load_key(hmac_state *ctx, u8* key, int B);
-void tag_generation(hmac_state *ctx, u8* tag, u8 *message, u64 dataLength, int tagSize);
-int tag_validation(hmac_state *ctx, u8 *tag, u8 *message, u64 dataLength, int tagSize);
+void hmac_load_key(hmac_state *cs, u8* key, int B);
+void tag_generation(hmac_state *cs, u8* tag, u8 *message, u64 dataLength, int tagSize);
+int tag_validation(hmac_state *cs, u8 *tag, u8 *message, u64 dataLength, int tagSize);
 
 #endif
