@@ -23,7 +23,7 @@ int main()
 	// Iterate a block
 	u8 keystream[64];
 	u32 counter = 1;
-	chacha20_block(&cs, counter, (u32*)keystream);
+	chacha_block(&cs, counter, (u32*)keystream);
 
 	// Swap back
 	byte_swap(keystream, keystream, 64);

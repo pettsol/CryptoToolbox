@@ -24,13 +24,13 @@ int main()
 
 	// Initialize the cipher to encrypt
 	chacha_state e_cs;
-	chacha20_initialize(&e_cs, (u32*)key, (u32*)nonce);
+	chacha_initialize(&e_cs, (u32*)key, (u32*)nonce);
 
 	// Declare array to hold ciphertext
 	u8 ciphertext[message.size()];
 
 	// Encrypt
-	chacha20_process_packet(&e_cs, ciphertext, (u8*)message.data(), message.size());
+	chacha_process_packet(&e_cs, ciphertext, (u8*)message.data(), message.size());
 
 	// Print the hex encoding of the ciphertext
 	char hex_ciphertext[2*message.size()+1];
@@ -42,13 +42,13 @@ int main()
 	//
 	// Initialize the cipher to decrypt
 	chacha_state d_cs;
-	chacha20_initialize(&d_cs, (u32*)key, (u32*)nonce);
+	chacha_initialize(&d_cs, (u32*)key, (u32*)nonce);
 
 	// Declare array to hold recovered message
 	u8 recovered[message.size()];
 
 	// Decrypt
-	chacha20_process_packet(&d_cs, recovered, ciphertext, message.size());
+	chacha_process_packet(&d_cs, recovered, ciphertext, message.size());
 
 	// Translate to string
 	std::string recov_string((const char*)recovered, message.size());

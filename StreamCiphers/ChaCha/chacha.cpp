@@ -26,7 +26,7 @@ void byte_swap(u8 *output, u8 *input, int size)
 	}
 }
 
-void chacha20_initialize(chacha_state *cs, u32 key[8],  u32 nonce[3])
+void chacha_initialize(chacha_state *cs, u32 key[8],  u32 nonce[3])
 {
 	// Load constants into words 0-3
 	cs->state[0] = 0x61707865;
@@ -43,14 +43,14 @@ void chacha20_initialize(chacha_state *cs, u32 key[8],  u32 nonce[3])
 	std::memcpy(&(cs->state[13]), nonce, 12);
 }
 
-void chacha20_block(chacha_state *ctx, u32 counter, u32 *keystream)
+void chacha_block(chacha_state *cs, u32 counter, u32 *keystream)
 {
 
-	ctx->state[12] = counter;
+	cs->state[12] = counter;
 
-	chacha_state ctx_work;
+	chacha_state cs_work;
 
-	std::memcpy(ctx_work.state, ctx->state, 64);
+	std::memcpy(cs_work.state, cs->state, 64);
 
 #ifdef TWELVE_ROUNDS
 	int NROUNDS = 12;
@@ -62,19 +62,19 @@ void chacha20_block(chacha_state *ctx, u32 counter, u32 *keystream)
 
 	for (int i = 0; i < (NROUNDS/2); i++)
 	{
-		inner_block(&ctx_work);
+		inner_block(&cs_work);
 	}
 	for (int i = 0; i < 16; i++)
 	{
-		ctx_work.state[i] += ctx->state[i];
+		cs_work.state[i] += cs->state[i];
 		//ctx->state[i] += ctx_work.state[i];
 	}
-	std::memcpy(keystream, ctx_work.state, 64);
+	std::memcpy(keystream, cs_work.state, 64);
 	//std::memcpy(keystream, ctx->state, 64); 
 		
 }
 
-void chacha20_process_packet(chacha_state *cs, u8 *output, u8 *input, u64 size)
+void chacha_process_packet(chacha_state *cs, u8 *output, u8 *input, u64 size)
 {
 	// Generate sufficient keystream;
 	int n_words = std::ceil(double(size)/4);
@@ -87,7 +87,7 @@ void chacha20_process_packet(chacha_state *cs, u8 *output, u8 *input, u64 size)
 
 	for (int i = 0; i < n_iterations; i++)
 	{
-		chacha20_block(cs, counter, &(keystream[16*i]));
+		chacha_block(cs, counter, &(keystream[16*i]));
 		counter++;
 	}
 

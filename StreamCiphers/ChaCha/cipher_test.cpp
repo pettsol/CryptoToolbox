@@ -19,7 +19,7 @@ int main()
 
 	// Initialize the cipher
 	chacha_state cs;
-	chacha20_initialize(&cs, (u32*)key, (u32*)nonce);
+	chacha_initialize(&cs, (u32*)key, (u32*)nonce);
 
 	// Declare plaintext
 	std::string plaintext = "Ladies and Gentlemen of the class of '99: If I could offer you only one tip for the future, sunscreen would be it.";
@@ -28,7 +28,7 @@ int main()
 	u8 ciphertext[plaintext.size()];
 
 	// Encrypt
-	chacha20_process_packet(&cs, ciphertext, (u8*)plaintext.data(), plaintext.size());
+	chacha_process_packet(&cs, ciphertext, (u8*)plaintext.data(), plaintext.size());
 
 	// Convert ciphertext to hex
 	char ciphertext_hex[2*plaintext.size()+1];
