@@ -54,7 +54,7 @@ void hmac_load_key(hmac_state *cs, u8* key, int B)
 	}
 }
 
-void tag_generation(hmac_state *cs, u8 *tag, u8 *message, u64 dataLength, int tagLength)
+void hmac_tag_generation(hmac_state *cs, u8 *tag, u8 *message, u64 dataLength, int tagLength)
 {
 	// Assert that datalength is strictly positive
 	if ( dataLength < 1 ) return;
@@ -85,11 +85,11 @@ void tag_generation(hmac_state *cs, u8 *tag, u8 *message, u64 dataLength, int ta
 	delete[] inner_computation;
 }
 
-int tag_validation(hmac_state *cs, u8 *tag, u8 *message, u64 dataLength, int tagLength)
+int hmac_tag_validation(hmac_state *cs, u8 *tag, u8 *message, u64 dataLength, int tagLength)
 {
 	// Generate a tag from the received message
 	u8 newTag[tagLength];
-	tag_generation(cs, newTag, message, dataLength, tagLength);
+	hmac_tag_generation(cs, newTag, message, dataLength, tagLength);
 
 	// Compare the newly generated tag with the
 	// recevied tag.

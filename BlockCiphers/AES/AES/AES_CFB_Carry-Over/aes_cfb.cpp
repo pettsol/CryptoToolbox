@@ -49,7 +49,7 @@ void KeyExpansion(u8 key[], u32 key_schedule[])
 	}
 }
 
-void aes_load_iv(cipher_state *cs, u32 *iv)
+void aes_load_iv(aes_state *cs, u32 *iv)
 {
 	cs->reg1 = *iv; iv++;
 	cs->reg2 = *iv; iv++;
@@ -57,13 +57,13 @@ void aes_load_iv(cipher_state *cs, u32 *iv)
 	cs->reg4 = *iv; iv++;
 }
 
-void cfb_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv)
+void aes_cfb_initialize(aes_state *cs, u8 key[], u32 *iv)
 {
 	KeyExpansion(key, cs->rk);
 	aes_load_iv(cs, iv);
 }
 
-void aes_encrypt(cipher_state *cs, u32 keystream[])
+void aes_encrypt(aes_state *cs, u32 keystream[])
 {
 	initial_round(&(cs->reg1), &(cs->reg2), &(cs->reg3), &(cs->reg4), &(cs->rk[0]));
 	#ifndef ROUND_REDUCED
@@ -82,7 +82,7 @@ void aes_encrypt(cipher_state *cs, u32 keystream[])
 	keystream[2] = cs->reg3; keystream[3] = cs->reg4;
 }
 
-void full_state_update(cipher_state *cs, u32 *ctxt)
+void full_state_update(aes_state *cs, u32 *ctxt)
 {
 	cs->reg1 = (*ctxt); ctxt++;
 	cs->reg2 = (*ctxt); ctxt++;
@@ -90,7 +90,7 @@ void full_state_update(cipher_state *cs, u32 *ctxt)
 	cs->reg4 = (*ctxt); ctxt++;
 }
 
-void partial_state_update(cipher_state *cs, u8 *ctxt, int size)
+void partial_state_update(aes_state *cs, u8 *ctxt, int size)
 {
 	if (size % 4 == 0)
 	{
@@ -239,7 +239,7 @@ void partial_state_update(cipher_state *cs, u8 *ctxt, int size)
 
 }
 
-void cfb_process_packet(cipher_state *cs, u8 *out, u8 *in, int size, int mode)
+void aes_cfb_process_packet(aes_state *cs, u8 *out, u8 *in, int size, int mode)
 {
 	
 	u32 *w_ptr_in = (u32*)in;;

@@ -36,7 +36,7 @@ int main()
 	// holds the state of the
 	// cipher (i.e. the IV
 	// or previous ciphertext).
-	cipher_state e_cs;
+	aes_state e_cs;
 
 	// In order to initialize
 	// the cipher, one must pass
@@ -47,7 +47,7 @@ int main()
 	// and the key schedule is
 	// computed and stored in the
 	// cipher state.
-	cfb_initialize_cipher(&e_cs, key, iv);
+	aes_cfb_initialize(&e_cs, key, iv);
 
 	// The following string will
 	// be encrypted.
@@ -69,7 +69,7 @@ the implementation is to be used............This is an even longer message blabl
 	// of the plaintext is also required.
 	// State that the input is to
 	// be encrypted.
-	cfb_process_packet(&e_cs, ciphertext, (u8*)plaintext.data(), plaintext.size(), ENCRYPT);
+	aes_cfb_process_packet(&e_cs, ciphertext, (u8*)plaintext.data(), plaintext.size(), ENCRYPT);
 
 	// Print the corresponding
 	// ciphertext:
@@ -80,17 +80,17 @@ the implementation is to be used............This is an even longer message blabl
 	
 	// Declare a new cipher
 	// struct to decrypt
-	cipher_state d_cs;
+	aes_state d_cs;
 
 	// Initialize
-	cfb_initialize_cipher(&d_cs, key, iv);
+	aes_cfb_initialize(&d_cs, key, iv);
 
 	// Declare a variable to
 	// hold the recovered text.
 	u8 recovered[ciphertext_string.size()];
 
 	// Decrypt
-	cfb_process_packet(&d_cs, recovered, (u8*)ciphertext_string.data(), ciphertext_string.size(), DECRYPT);
+	aes_cfb_process_packet(&d_cs, recovered, (u8*)ciphertext_string.data(), ciphertext_string.size(), DECRYPT);
 
 	// Print the recovered text
 	std::string recovered_string((char*)recovered, ciphertext_string.size());

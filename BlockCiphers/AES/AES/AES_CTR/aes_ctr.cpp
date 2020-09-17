@@ -57,7 +57,7 @@ void KeyExpansion(u8 key[], u32 key_schedule[])
 	}
 }
 
-void aes_load_iv(cipher_state *cs, u32 *iv)
+void aes_load_iv(aes_state *cs, u32 *iv)
 {
 	// Load IV - 96 bits
 	cs->reg1 = *iv; iv++;
@@ -68,13 +68,13 @@ void aes_load_iv(cipher_state *cs, u32 *iv)
 	std::memcpy(&cs->reg4, ctr, 4);
 }
 
-void ctr_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv)
+void aes_ctr_initialize(aes_state *cs, u8 key[], u32 *iv)
 {
 	KeyExpansion(key, cs->rk);
 	aes_load_iv(cs, iv);
 }
 
-void aes_encrypt(cipher_state *cs, u32 keystream[])
+void aes_encrypt(aes_state *cs, u32 keystream[])
 {
 	// Save the state
 	u32 state[4];
@@ -100,7 +100,7 @@ void aes_encrypt(cipher_state *cs, u32 keystream[])
 	std::memcpy(&(cs->reg1), state, 16);
 }
 
-void state_update(cipher_state *cs)
+void state_update(aes_state *cs)
 {
 	// Increment the counter. Note that the CTR is defined in
 	// big endian convention.
@@ -117,7 +117,7 @@ void state_update(cipher_state *cs)
 		   (((tmp) << 24) & 0xff000000);
 }
 
-void ctr_process_packet(cipher_state *cs, u8 *out, u8 *in, int size)
+void aes_ctr_process_packet(aes_state *cs, u8 *out, u8 *in, int size)
 {
 	
 	u32 *w_ptr_in = (u32*)in;;

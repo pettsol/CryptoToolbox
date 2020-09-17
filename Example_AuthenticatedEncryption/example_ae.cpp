@@ -29,11 +29,11 @@ int main()
 	hmac_load_key(&a_cs, a_key, HMAC_KEYLENGTH);
 
 	// Instantiate and initialize a AES_CFB struct
-	cipher_state e_cs;
+	aes_state e_cs;
 
 	// Load an all-zero IV to initialize the feedback register
 	u32 iv[AES_BLOCKSIZE/4] = {0};
-	cfb_initialize_cipher(&e_cs, e_key, iv);
+	aes_cfb_initialize(&e_cs, e_key, iv);
 
 	
 	//////////////////////////////////////////////////////////
@@ -61,10 +61,10 @@ int main()
 	u8 msg[plaintext.size() + TAGSIZE];
 
 	// The message will look like: ciphertext || tag
-	cfb_process_packet(&e_cs, msg, (u8*)plaintext.data(), plaintext.size(), ENCRYPT);
+	aes_cfb_process_packet(&e_cs, msg, (u8*)plaintext.data(), plaintext.size(), ENCRYPT);
 
 	// Compute the HMAC tag over the ciphertext and append:
-	tag_generation(&a_cs, &msg[plaintext.size()], msg, plaintext.size(), TAGSIZE);
+	hmac_tag_generation(&a_cs, &msg[plaintext.size()], msg, plaintext.size(), TAGSIZE);
 
 	// Print the entire message:
 	char hexMsgChar[2*(plaintext.size() + TAGSIZE)+1];
@@ -78,11 +78,11 @@ int main()
 	// message be decrypted.
 	
 	// Declare a new AES_CFB struct to decrypt.
-	cipher_state d_cs;
-	cfb_initialize_cipher(&d_cs, e_key, iv);
+	aes_state d_cs;
+	aes_cfb_initialize(&d_cs, e_key, iv);
 
 	// Validate the tag:
-	if ( !(tag_validation(&a_cs, &msg[plaintext.size()], msg, plaintext.size(), TAGSIZE)) ) {
+	if ( !(hmac_tag_validation(&a_cs, &msg[plaintext.size()], msg, plaintext.size(), TAGSIZE)) ) {
 		std::cout << "Invalid tag!\n";
 		exit(1);
 	}
@@ -90,7 +90,7 @@ int main()
 	std::cout << "Valid tag\n";
 
 	u8 recovered[plaintext.size()];
-	cfb_process_packet(&d_cs, recovered, msg, plaintext.size(), DECRYPT);
+	aes_cfb_process_packet(&d_cs, recovered, msg, plaintext.size(), DECRYPT);
 
 	std::string recov((const char*)recovered, plaintext.size());
 	std::cout << "Recovered: " << recov << std::endl;
@@ -119,7 +119,7 @@ int main()
 	hc128_process_packet(&e_cs2, &msg2[HC128_IV_SIZE], (u8*)plaintext2.data(), plaintext2.size());
 
 	// Compute the tag and append. NB! Tag is computed over IV || Ciphertext!
-	tag_generation(&a_cs, &msg2[HC128_IV_SIZE+plaintext2.size()], msg2, HC128_IV_SIZE+plaintext2.size(), TAGSIZE);
+	hmac_tag_generation(&a_cs, &msg2[HC128_IV_SIZE+plaintext2.size()], msg2, HC128_IV_SIZE+plaintext2.size(), TAGSIZE);
 	// Print contents of msg2:
 	
 	char hexMsg2Char[2*(HC128_IV_SIZE+plaintext2.size()+TAGSIZE)+1];
@@ -129,7 +129,7 @@ int main()
 
 	// Validate the tag over the IV and the ciphertext. If the(IV || Ciphertext, Tag)-pair is
 	// not valid, the ciphertext is NOT decrypted.
-	if ( !(tag_validation(&a_cs, &msg2[HC128_IV_SIZE+plaintext2.size()], msg2, HC128_IV_SIZE+plaintext2.size(), TAGSIZE)) ) {
+	if ( !(hmac_tag_validation(&a_cs, &msg2[HC128_IV_SIZE+plaintext2.size()], msg2, HC128_IV_SIZE+plaintext2.size(), TAGSIZE)) ) {
 		std::cout << "Invalid tag!\n";
 	}
 	// Else, tag is valid. Proceed to initialize the cipher and decrypt.

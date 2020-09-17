@@ -45,7 +45,7 @@ F72206B65796C656E3D626C6F636B6C656E";
 	u8 tag[16];
 
 	//tag_generation(&hs, (u8*)message.data(), tag, message.size());
-	tag_generation(&hs, tag, message, msg.size()/2, 16);
+	hmac_tag_generation(&hs, tag, message, msg.size()/2, 16);
 
 	char hex_tag[33];
 	hex_encode(hex_tag, tag, 16);
@@ -55,7 +55,7 @@ F72206B65796C656E3D626C6F636B6C656E";
 	u8 expected_tag[16];
 	hex_decode(expected_tag, ExpectedTag.data(), 32);
 
-	if ( tag_validation(&hs, tag, message, msg.size()/2, 16))
+	if ( hmac_tag_validation(&hs, tag, message, msg.size()/2, 16))
 	{ 
 		std::cout << "Validation Tag confirmed\n";
 	} else {

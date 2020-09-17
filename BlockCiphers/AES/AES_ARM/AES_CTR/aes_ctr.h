@@ -14,7 +14,7 @@
 
 // Struct containing the shift register of previous ciphertexts
 // and the round keys of the cipher
-struct cipher_state{
+struct aes_state{
 	// Registers to hold previous ciphertext	
 	u32 reg1;
 	u32 reg2;
@@ -28,15 +28,15 @@ struct cipher_state{
 // The interface consist of
 // cipher initialization
 // and process packet.
-void ctr_initialize_cipher(cipher_state *cs, u8 key[], u32 *iv);
-void ctr_process_packet(cipher_state *cs, u8 *out, u8 *in, int size);
+void aes_ctr_initialize(aes_state *cs, u8 key[], u32 *iv);
+void aes_ctr_process_packet(aes_state *cs, u8 *out, u8 *in, int size);
 
 // the encryption mode of the cipher 
 // and the key expansion can be accessed
 // directly in order to verify the
 // implementation with official
 // test vectors.
-void aes_encrypt(cipher_state *cs, u32 keystream[]);
+void aes_encrypt(aes_state *cs, u32 keystream[]);
 void KeyExpansion(u8 key[], u32 key_schedule[]);
 
 inline void initial_round(u32 *a, u32 *b,  u32 *c, u32 *d, u32 *round_key)
