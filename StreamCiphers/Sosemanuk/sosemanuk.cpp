@@ -2,40 +2,40 @@
 #include <iostream>
 
 
-void sosemanuk_load_key(sosemanuk_state *ctx, u8 *key, u64 size)
+void sosemanuk_load_key(sosemanuk_state *cs, u8 *key, u64 size)
 {
 	// Find the 25 round keys that will be used
 	// in the IV injection.
-	serpent_key_schedule(&(ctx->serpent_cs), key, size);
+	serpent_key_schedule(&(cs->serpent_cs), key, size);
 }
 
-void sosemanuk_load_iv(sosemanuk_state *ctx, u32 *iv)
+void sosemanuk_load_iv(sosemanuk_state *cs, u32 *iv)
 {
 	// Let the IV serve as input to the serpent cipher
 	// and store the output from the 12th, 18th and 24th
 	// round as the initial state of Sosemanuk.
 	u32 initial_state[12];
-	serpent_process_packet(&(ctx->serpent_cs), initial_state, iv, 16);
+	serpent_process_packet(&(cs->serpent_cs), initial_state, iv, 16);
 
-	ctx->s[9] = initial_state[0];
-	ctx->s[8] = initial_state[1];
-	ctx->s[7] = initial_state[2];
-	ctx->s[6] = initial_state[3];
+	cs->s[9] = initial_state[0];
+	cs->s[8] = initial_state[1];
+	cs->s[7] = initial_state[2];
+	cs->s[6] = initial_state[3];
 	
-	ctx->R1 = initial_state[4];
-	ctx->R2 = initial_state[6];
+	cs->R1 = initial_state[4];
+	cs->R2 = initial_state[6];
 
-	ctx->s[5] = initial_state[7];
-	ctx->s[4] = initial_state[5];
+	cs->s[5] = initial_state[7];
+	cs->s[4] = initial_state[5];
 
-	ctx->s[3] = initial_state[8];
-	ctx->s[2] = initial_state[9];
-	ctx->s[1] = initial_state[10];
-	ctx->s[0] = initial_state[11];
+	cs->s[3] = initial_state[8];
+	cs->s[2] = initial_state[9];
+	cs->s[1] = initial_state[10];
+	cs->s[0] = initial_state[11];
 	
 }
 
-void sosemanuk_process_packet(sosemanuk_state *ctx, u8 *out, u8 *in, u64 size)
+void sosemanuk_process_packet(sosemanuk_state *cs, u8 *out, u8 *in, u64 size)
 {
 	// Get word ptrs
 	u32 *w_ptr_out = (u32*)out; u32 *w_ptr_in = (u32*)in;
@@ -50,17 +50,17 @@ void sosemanuk_process_packet(sosemanuk_state *ctx, u8 *out, u8 *in, u64 size)
 		// Four steps of:
 		// - Update FSM
 		// - Update LFSR
-		sosemanuk_fsm_update(ctx, &f_buf[0]);
-		sosemanuk_lfsr_update(ctx, &s_buf[0]);
+		sosemanuk_fsm_update(cs, &f_buf[0]);
+		sosemanuk_lfsr_update(cs, &s_buf[0]);
 
-		sosemanuk_fsm_update(ctx, &f_buf[1]);
-		sosemanuk_lfsr_update(ctx, &s_buf[1]);
+		sosemanuk_fsm_update(cs, &f_buf[1]);
+		sosemanuk_lfsr_update(cs, &s_buf[1]);
 
-		sosemanuk_fsm_update(ctx, &f_buf[2]);
-		sosemanuk_lfsr_update(ctx, &s_buf[2]);
+		sosemanuk_fsm_update(cs, &f_buf[2]);
+		sosemanuk_lfsr_update(cs, &s_buf[2]);
 
-		sosemanuk_fsm_update(ctx, &f_buf[3]);
-		sosemanuk_lfsr_update(ctx, &s_buf[3]);
+		sosemanuk_fsm_update(cs, &f_buf[3]);
+		sosemanuk_lfsr_update(cs, &s_buf[3]);
 
 		// Then feed them all into Serpent1
 		serpent1(&f_buf[0], &f_buf[1], &f_buf[2], &f_buf[3]);
@@ -78,17 +78,17 @@ void sosemanuk_process_packet(sosemanuk_state *ctx, u8 *out, u8 *in, u64 size)
 		size -= 16;
 	}
 
-	sosemanuk_fsm_update(ctx, &f_buf[0]);
-	sosemanuk_lfsr_update(ctx, &s_buf[0]);
+	sosemanuk_fsm_update(cs, &f_buf[0]);
+	sosemanuk_lfsr_update(cs, &s_buf[0]);
 	
-	sosemanuk_fsm_update(ctx, &f_buf[1]);
-	sosemanuk_lfsr_update(ctx, &s_buf[1]);
+	sosemanuk_fsm_update(cs, &f_buf[1]);
+	sosemanuk_lfsr_update(cs, &s_buf[1]);
 
-	sosemanuk_fsm_update(ctx, &f_buf[2]);
-	sosemanuk_lfsr_update(ctx, &s_buf[2]);
+	sosemanuk_fsm_update(cs, &f_buf[2]);
+	sosemanuk_lfsr_update(cs, &s_buf[2]);
 
-	sosemanuk_fsm_update(ctx, &f_buf[3]);
-	sosemanuk_lfsr_update(ctx, &s_buf[3]);
+	sosemanuk_fsm_update(cs, &f_buf[3]);
+	sosemanuk_lfsr_update(cs, &s_buf[3]);
 
 	// Then feed them all into Serpent1
 	serpent1(&f_buf[0], &f_buf[1], &f_buf[2], &f_buf[3]);
