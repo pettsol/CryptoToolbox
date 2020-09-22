@@ -213,8 +213,6 @@ inline void aegis_state_update(aegis_state *cs, u32 *message_block)
 #ifdef ARM_INTRINSICS
 	// ARM INSTRINSICS	
 	B_S3 = veorq_u8(B_S3, B_KEY);
-	//vst1q_u8((u8*)cs->s2, B);
-	//B = vaeseq_u8(B, Key);
 	B_S3 = vaesmcq_u8(vaeseq_u8(B_S3, B_KEY));
 	B_S3 = veorq_u8(B_S3, B_KEY);
 	B_TMP = B_KEY;
