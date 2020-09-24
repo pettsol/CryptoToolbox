@@ -45,7 +45,7 @@ void pad_message(u8 *message, u64 size)
 	*tmp = (u8)(bit_length);
 }
 
-void process_message(u32 *digest, u32 *message, u64 size)
+void sha256_process_message(u8 *digest, u8 *message, u64 size)
 {
 	int n = 0;
 	// Declare message to hold padded text
@@ -134,12 +134,13 @@ void process_message(u32 *digest, u32 *message, u64 size)
 		ss.digest[7] = ss.working_variables[7] + ss.digest[7];
 	}
 	// Make sure output is little-endian
+	u32 *u32_digest = (u32*)digest;
 	for (int i = 0; i < 8; i++)
 	{
-		*digest = ((ss.digest[i] << 24) & 0xff000000) |
+		*u32_digest = ((ss.digest[i] << 24) & 0xff000000) |
 		       	((ss.digest[i] << 8) & 0x00ff0000) |
 		       	((ss.digest[i] >> 8) & 0x0000ff00) |
-		       	((ss.digest[i] >> 24) & 0x000000ff); digest++;
+		       	((ss.digest[i] >> 24) & 0x000000ff); u32_digest++;
 	}
 	//std::memcpy(digest, ss.digest, 32);
 }

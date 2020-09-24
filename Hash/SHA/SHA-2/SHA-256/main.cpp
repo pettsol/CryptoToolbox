@@ -27,9 +27,9 @@ int main()
 		msg += "a";
 	}
 
-	u32 digest[32] = {0};
+	u8 digest[32] = {0};
 
-	process_message(digest, (u32*)msg.data(), (u64)msg.size());
+	sha256_process_message(digest, (u8*)msg.data(), (u64)msg.size());
 
 	std::string dig((char*)digest, 32);
 

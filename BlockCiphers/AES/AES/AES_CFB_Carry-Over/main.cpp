@@ -28,7 +28,7 @@ int main()
 	// This implementation
 	// operates on 4 byte
 	// words.
-	u32 iv[BLOCKSIZE/4] = {0};
+	u8 iv[BLOCKSIZE] = {0};
 	
 	// *ENCRYPTION* //
 

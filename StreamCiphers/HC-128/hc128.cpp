@@ -11,7 +11,7 @@
 #include <iostream>
 #include <cstring>
 
-void hc128_initialize(hc128_state *cs, u32 key[4], u32 iv[4])
+void hc128_initialize(hc128_state *cs, u8 key[16], u8 iv[16])
 {
 	// The initialization of HC128 maps the key and IV to an initial state
 	// held in the P and Q tables.

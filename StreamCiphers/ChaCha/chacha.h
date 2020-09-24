@@ -48,7 +48,7 @@ struct chacha_state{
 	u32 state[16];
 };
 
-void chacha_initialize(chacha_state *cs, u32 key[8], u32 nonce[3]);
+void chacha_initialize(chacha_state *cs, u8 key[32], u8 nonce[12]);
 void chacha_block(chacha_state *cs, u32 counter, u32 *keystream);
 void chacha_process_packet(chacha_state *cs, u8 *output, u8 *input, u64 size);
 void test_q(u32 *input, u32 *output);

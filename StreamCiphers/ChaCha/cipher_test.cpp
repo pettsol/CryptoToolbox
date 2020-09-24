@@ -19,7 +19,7 @@ int main()
 
 	// Initialize the cipher
 	chacha_state cs;
-	chacha_initialize(&cs, (u32*)key, (u32*)nonce);
+	chacha_initialize(&cs, key, nonce);
 
 	// Declare plaintext
 	std::string plaintext = "Ladies and Gentlemen of the class of '99: If I could offer you only one tip for the future, sunscreen would be it.";

@@ -28,11 +28,11 @@ int main()
 
 	aegis_state cs_1;
 
-	aegis_load_key(&cs_1, (u32*)key_1);
+	aegis_load_key(&cs_1, key_1);
 
-	aegis_encrypt_packet(&cs_1, ct_1, tag_1, pt_1, 0, (u32*)iv_1, 0, 16);
+	aegis_encrypt_packet(&cs_1, ct_1, tag_1, pt_1, 0, iv_1, 0, 16);
 
-	if (!aegis_decrypt_packet(&cs_1, recv_1, ct_1, 0, (u32*)iv_1, (u32*)tag_1, 0, 16))
+	if (!aegis_decrypt_packet(&cs_1, recv_1, ct_1, 0, iv_1, tag_1, 0, 16))
 	{
 		std::cout << "Invalid tag!\n";
 		exit(1);
@@ -100,11 +100,11 @@ int main()
 
 	aegis_state cs_2;
 
-	aegis_load_key(&cs_2, (u32*)key_2);
+	aegis_load_key(&cs_2, key_2);
 
-	aegis_encrypt_packet(&cs_2, ct_2, tag_2, pt_2, ad_2, (u32*)iv_2, 16, 16);
+	aegis_encrypt_packet(&cs_2, ct_2, tag_2, pt_2, ad_2, iv_2, 16, 16);
 
-	if (!aegis_decrypt_packet(&cs_2, recv_2, ct_2, ad_2, (u32*)iv_2, (u32*)tag_2, 16, 16))
+	if (!aegis_decrypt_packet(&cs_2, recv_2, ct_2, ad_2, iv_2, tag_2, 16, 16))
 	{
 		std::cout << "Invalid tag!\n";
 		exit(1);
@@ -174,11 +174,11 @@ int main()
 
 	aegis_state cs_3;
 
-	aegis_load_key(&cs_3, (u32*)key_3);
+	aegis_load_key(&cs_3, key_3);
 
-	aegis_encrypt_packet(&cs_3, ct_3, tag_3, pt_3, ad_3, (u32*)iv_3, 4, 16);
+	aegis_encrypt_packet(&cs_3, ct_3, tag_3, pt_3, ad_3, iv_3, 4, 16);
 
-	if (!aegis_decrypt_packet(&cs_3, recv_3, ct_3, ad_3, (u32*)iv_3, (u32*)tag_3, 4, 16))
+	if (!aegis_decrypt_packet(&cs_3, recv_3, ct_3, ad_3, iv_3, tag_3, 4, 16))
 	{
 		std::cout << "Invalid tag!\n";
 		exit(1);
@@ -255,12 +255,12 @@ int main()
 
 	aegis_state cs_4;
 	
-	aegis_load_key(&cs_4, (u32*)key_4);
-	aegis_encrypt_packet(&cs_4, ct_4, tag_4, pt_4, ad_4, (u32*)iv_4, 8, 32);
+	aegis_load_key(&cs_4, key_4);
+	aegis_encrypt_packet(&cs_4, ct_4, tag_4, pt_4, ad_4, iv_4, 8, 32);
 
 	u8 recv_4[32] = {0};
 
-	if (!aegis_decrypt_packet(&cs_4, recv_4, ct_4, ad_4, (u32*)iv_4, (u32*)tag_4, 8, 32))
+	if (!aegis_decrypt_packet(&cs_4, recv_4, ct_4, ad_4, iv_4, tag_4, 8, 32))
 	{
 		std::cout << "Invalid tag!\n";
 		exit(1);

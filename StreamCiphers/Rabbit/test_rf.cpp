@@ -29,8 +29,8 @@ int main()
 
 	rabbit_state cs;
 
-	rabbit_key_setup(&cs, (u32*)key);
-//	rabbit_iv_setup(&cs, (u32*)iv);
+	rabbit_key_setup(&cs, key);
+//	rabbit_iv_setup(&cs, iv);
 //
 //	u8 keystream[16];
 //

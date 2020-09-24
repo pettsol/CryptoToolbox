@@ -38,7 +38,7 @@ struct aes_state{
 // The interface consist of
 // cipher initialization
 // and process packet.
-void aes_cfb_initialize(aes_state *cs, u8 key[], u32 *iv);
+void aes_cfb_initialize(aes_state *cs, u8 key[16], u8 iv[16]);
 void aes_cfb_process_packet(aes_state *cs, u8 *out, u8 *in, int size, int mode);
 
 // the encryption mode of the cipher 

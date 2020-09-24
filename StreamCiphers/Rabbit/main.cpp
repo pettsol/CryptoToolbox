@@ -20,8 +20,8 @@ int main()
 
 	rabbit_state cs;
 
-	rabbit_key_setup(&cs, (u32*)key);
-	rabbit_iv_setup(&cs, (u32*)iv);
+	rabbit_key_setup(&cs, key);
+	rabbit_iv_setup(&cs, iv);
 
 	std::string plaintext = "Hello World! This is the Rabbit cipher designed by Cryptico A/S. It was submitted to the eSTREAM portfolio, and was a successful entrant. This implementation was written by Petter Solnoer and has been verified by official test vectors....";
 
@@ -37,7 +37,7 @@ int main()
 
 	rabbit_process_packet(&cs, ct_throw, (u8*)mumbo.data(), mumbo.size());
 
-	rabbit_iv_setup(&cs, (u32*)iv);
+	rabbit_iv_setup(&cs, iv);
 
 	std::string second_pt = "Does this decrypt successfully?";
 
@@ -55,8 +55,8 @@ int main()
 	std::cout << "Ciphertext: " << ct_s << std::endl;
 	
 	rabbit_state d_cs;
-	rabbit_key_setup(&d_cs, (u32*)key);
-	rabbit_iv_setup(&d_cs, (u32*)iv);
+	rabbit_key_setup(&d_cs, key);
+	rabbit_iv_setup(&d_cs, iv);
 
 	u8 recv[plaintext.size()];
 
@@ -66,7 +66,7 @@ int main()
 
 	std::cout << "Recovered: " << recovered << std::endl;
 
-	rabbit_iv_setup(&d_cs, (u32*)iv);
+	rabbit_iv_setup(&d_cs, iv);
 
 	u8 recv2[second_pt.size()];
 

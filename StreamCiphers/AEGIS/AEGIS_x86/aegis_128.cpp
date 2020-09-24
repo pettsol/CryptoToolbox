@@ -17,7 +17,7 @@ void always_memset(void *dest, int ch, size_t count)
 	asm volatile("" : : : "memory");
 }
 
-void aegis_load_key(aegis_state *cs, u32 *key)
+void aegis_load_key(aegis_state *cs, u8 key[16])
 {
 	std::memcpy(cs->key, key, 16);
 }
@@ -247,9 +247,9 @@ void aegis_finalize(aegis_state *cs, u32 *tag, u64 adlen, u64 msglen)
 	tag[3] = cs->s0[3] ^ cs->s1[3] ^ cs->s2[3] ^ cs->s3[3] ^ cs->s4[3];
 }
 
-void aegis_encrypt_packet(aegis_state *cs, u8 *ct, u8* tag, u8 *pt, u8 *ad, u32 *iv, u64 adlen, u64 msglen)
+void aegis_encrypt_packet(aegis_state *cs, u8 *ct, u8 tag[16], u8 *pt, u8 *ad, u8 iv[16], u64 adlen, u64 msglen)
 {
-	aegis_initialize(cs, iv);
+	aegis_initialize(cs, (u32*)iv);
 
 	aegis_process_ad(cs, ad, adlen);
 
@@ -258,12 +258,14 @@ void aegis_encrypt_packet(aegis_state *cs, u8 *ct, u8* tag, u8 *pt, u8 *ad, u32 
 	aegis_finalize(cs, (u32*)tag, adlen, msglen);
 }
 
-int aegis_decrypt_packet(aegis_state *cs, u8 *pt, u8 *ct, u8 *ad, u32 *iv, u32 *tag, u64 adlen, u64 msglen)
+int aegis_decrypt_packet(aegis_state *cs, u8 *pt, u8 *ct, u8 *ad, u8 iv[16], u8 tag[16], u64 adlen, u64 msglen)
 {
 	int flag = 0;
 	u32 re_tag[4];
+	u32 u32_tag[4];
+	std::memcpy(u32_tag, tag, 16);
 
-	aegis_initialize(cs, iv);
+	aegis_initialize(cs, (u32*)iv);
 
 	aegis_process_ad(cs, ad, adlen);
 
@@ -277,7 +279,7 @@ int aegis_decrypt_packet(aegis_state *cs, u8 *pt, u8 *ct, u8 *ad, u32 *iv, u32 *
 	
 	for (int i = 0; i < 4; i++)
 	{
-		if (re_tag[i] != tag[i]) flag = 1;
+		if (re_tag[i] != u32_tag[i]) flag = 1;
 	}
 	if (flag)
 	{

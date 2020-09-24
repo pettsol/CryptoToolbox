@@ -32,7 +32,7 @@ int main()
 	aes_state e_cs;
 
 	// Load an all-zero IV to initialize the feedback register
-	u32 iv[AES_BLOCKSIZE/4] = {0};
+	u8 iv[AES_BLOCKSIZE] = {0};
 	aes_cfb_initialize(&e_cs, e_key, iv);
 
 	
@@ -107,7 +107,7 @@ int main()
 
 	// Declare a cipher struct for encryption. We will use HC-128.
 	hc128_state e_cs2;
-	hc128_initialize(&e_cs2, (u32*)e_key, iv);
+	hc128_initialize(&e_cs2, e_key, iv);
 
 	// Declare a msg2 buffer to hold IV || Ciphertext || Tag
 	u8 msg2[HC128_IV_SIZE + plaintext2.size() + TAGSIZE];
@@ -139,7 +139,7 @@ int main()
 	hc128_state d_cs2;
 	
 	// Initialize cipher with new IV. The IV sits at the front of the msg2.
-	hc128_initialize(&d_cs2, (u32*)e_key, (u32*)msg2);
+	hc128_initialize(&d_cs2, e_key, msg2);
 
 	// Decrypt. The ciphertext sits after the IV in msg2.
 	u8 recovered2[plaintext2.size()];

@@ -22,7 +22,7 @@
 // The HMAC may be initialized by pre-XOR'ing the key with
 // ipad / opad, saving time when packets are processed in
 // a later stage.
-void hmac_load_key(hmac_state *cs, u8* key, int B)
+void hmac_load_key(hmac_state *cs, u8 *key, int keysize)
 {
 	// If the key input is larger than desired, the
 	// key must be hashed to the correct size by using
@@ -31,17 +31,17 @@ void hmac_load_key(hmac_state *cs, u8* key, int B)
 	// Create a local copy of the key
 	u8 localKey[HMAC_KEYLENGTH];
 
-	if (B > HMAC_KEYLENGTH) {
+	if (keysize > HMAC_KEYLENGTH) {
 		u8 hashedKey[DIGESTSIZE];
-		process_message((u32*)hashedKey, (u32*)key, B);
+		sha256_process_message(hashedKey, key, keysize);
 		std::memcpy(localKey, hashedKey, DIGESTSIZE);
-		B = DIGESTSIZE;
+		keysize = DIGESTSIZE;
 	} else {
-		std::memcpy(localKey, key, B);
+		std::memcpy(localKey, key, keysize);
 	}
 
 	// Pad the key with zeroes if the size is too small
-	for (int i = B; i < HMAC_KEYLENGTH; i++) {
+	for (int i = keysize; i < HMAC_KEYLENGTH; i++) {
 		localKey[i] = 0;
 	}
 
@@ -66,7 +66,7 @@ void hmac_tag_generation(hmac_state *cs, u8 *tag, u8 *message, u64 dataLength, i
 
 	// Compute the hash of the message and the inner key
 	u8 inner_hash[DIGESTSIZE];
-	process_message((u32*)inner_hash, (u32*)inner_computation, dataLength+HMAC_KEYLENGTH);
+	sha256_process_message(inner_hash, inner_computation, dataLength+HMAC_KEYLENGTH);
 	
 	// The outer key is appended to the inner hash.
 	u8 outer_computation[DIGESTSIZE+HMAC_KEYLENGTH] = {0};
@@ -75,7 +75,7 @@ void hmac_tag_generation(hmac_state *cs, u8 *tag, u8 *message, u64 dataLength, i
 
 	// Computer the final hash
 	u8 outer_hash[DIGESTSIZE];
-	process_message((u32*)outer_hash, (u32*)outer_computation, DIGESTSIZE+HMAC_KEYLENGTH);
+	sha256_process_message(outer_hash, outer_computation, DIGESTSIZE+HMAC_KEYLENGTH);
 	
 	// The final message authentication code is then found by
 	// taking the leftmost t bytes.

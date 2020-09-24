@@ -74,10 +74,10 @@ void aes_load_iv(aes_state *cs, u32 *iv)
 	std::memcpy(&cs->reg4, ctr, 4);
 }
 
-void aes_ctr_initialize(aes_state *cs, u8 key[], u32 *iv)
+void aes_ctr_initialize(aes_state *cs, u8 key[16], u8 iv[16])
 {
 	KeyExpansion(key, cs->rk);
-	aes_load_iv(cs, iv);
+	aes_load_iv(cs, (u32*)iv);
 }
 
 void aes_encrypt(aes_state *cs, u32 keystream[])

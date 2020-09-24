@@ -64,7 +64,7 @@ struct hc128_state{
 	u32 Q[512];
 };
 
-void hc128_initialize(hc128_state *cs, u32 key[4], u32 iv[4]);
+void hc128_initialize(hc128_state *cs, u8 key[16], u8 iv[16]);
 void hc128_generate_keystream(hc128_state, u32 *keystream, u64 size);
 void hc128_process_packet(hc128_state *cs, u8 *output, u8 *input, u64 size);
 

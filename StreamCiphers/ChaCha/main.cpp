@@ -24,7 +24,7 @@ int main()
 
 	// Initialize the cipher to encrypt
 	chacha_state e_cs;
-	chacha_initialize(&e_cs, (u32*)key, (u32*)nonce);
+	chacha_initialize(&e_cs, key, nonce);
 
 	// Declare array to hold ciphertext
 	u8 ciphertext[message.size()];
@@ -42,7 +42,7 @@ int main()
 	//
 	// Initialize the cipher to decrypt
 	chacha_state d_cs;
-	chacha_initialize(&d_cs, (u32*)key, (u32*)nonce);
+	chacha_initialize(&d_cs, key, nonce);
 
 	// Declare array to hold recovered message
 	u8 recovered[message.size()];

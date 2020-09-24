@@ -2,20 +2,20 @@
 #include <iostream>
 
 
-void sosemanuk_load_key(sosemanuk_state *cs, u8 *key, u64 size)
+void sosemanuk_load_key(sosemanuk_state *cs, u8 *key, int keysize)
 {
 	// Find the 25 round keys that will be used
 	// in the IV injection.
-	serpent_key_schedule(&(cs->serpent_cs), key, size);
+	serpent_key_schedule(&(cs->serpent_cs), key, keysize);
 }
 
-void sosemanuk_load_iv(sosemanuk_state *cs, u32 *iv)
+void sosemanuk_load_iv(sosemanuk_state *cs, u8 iv[16])
 {
 	// Let the IV serve as input to the serpent cipher
 	// and store the output from the 12th, 18th and 24th
 	// round as the initial state of Sosemanuk.
 	u32 initial_state[12];
-	serpent_process_packet(&(cs->serpent_cs), initial_state, iv, 16);
+	serpent_process_packet(&(cs->serpent_cs), initial_state, (u32*)iv, 16);
 
 	cs->s[9] = initial_state[0];
 	cs->s[8] = initial_state[1];

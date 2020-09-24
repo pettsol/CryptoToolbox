@@ -33,14 +33,14 @@ int main()
 
 
 	
-	aegis_load_key(&cs, (u32*)key);
-	aegis_encrypt_packet(&cs, ct, tag, (u8*)plaintext.data(), iv, (u32*)iv, IV_SIZE, pt_length);
+	aegis_load_key(&cs, key);
+	aegis_encrypt_packet(&cs, ct, tag, (u8*)plaintext.data(), iv, iv, IV_SIZE, pt_length);
 
 	std::cout << "Successfully Encrypted\n";
 	
 	u8 recv[pt_length] = {0};
 
-	if (!aegis_decrypt_packet(&cs, recv, ct, iv, (u32*)iv, (u32*)tag, IV_SIZE, pt_length))
+	if (!aegis_decrypt_packet(&cs, recv, ct, iv, iv, tag, IV_SIZE, pt_length))
 	{
 		std::cout << "Invalid tag!\n";
 		exit(1);

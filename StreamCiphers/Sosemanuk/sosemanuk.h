@@ -20,12 +20,12 @@ struct sosemanuk_state{
 
 // The key schedule extracts the first 25 keys
 // from the Serpent key schedule
-void sosemanuk_load_key(sosemanuk_state *cs, u8 *key, u64 size);
+void sosemanuk_load_key(sosemanuk_state *cs, u8 *key, int keysize);
 
 // The IV injection extracts the result
 // from the 12th, 18th and 24th round
 // of Serpent.
-void sosemanuk_load_iv(sosemanuk_state *cs, u32 *iv);
+void sosemanuk_load_iv(sosemanuk_state *cs, u8 iv[16]);
 
 // Process packet consists of a state update
 // and an output function, as most stream

@@ -26,7 +26,7 @@ void byte_swap(u8 *output, u8 *input, int size)
 	}
 }
 
-void chacha_initialize(chacha_state *cs, u32 key[8],  u32 nonce[3])
+void chacha_initialize(chacha_state *cs, u8 key[32],  u8 nonce[12])
 {
 	// Load constants into words 0-3
 	cs->state[0] = 0x61707865;

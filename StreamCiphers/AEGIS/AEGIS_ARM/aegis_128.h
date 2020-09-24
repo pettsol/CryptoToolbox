@@ -35,9 +35,9 @@ struct aegis_state{
 	u32 w[4];
 };
 
-void aegis_load_key(aegis_state *cs, u32 *key);
-void aegis_encrypt_packet(aegis_state *cs, u8 *ct, u8* tag, u8 *pt, u8 *ad, u32 *iv, u64 adlen, u64 msglen);
-int aegis_decrypt_packet(aegis_state *cs, u8 *pt, u8 *ct, u8 *ad, u32 *iv, u32 *tag, u64 adlen, u64 msglen);
+void aegis_load_key(aegis_state *cs, u8 key[16]);
+void aegis_encrypt_packet(aegis_state *cs, u8 *ct, u8 tag[16], u8 *pt, u8 *ad, u8 iv[16], u64 adlen, u64 msglen);
+int aegis_decrypt_packet(aegis_state *cs, u8 *pt, u8 *ct, u8 *ad, u8 iv[16], u8 tag[16], u64 adlen, u64 msglen);
 
 // The AES round function is used five times in AEGIS-128
 inline void round(u32 *a, u32 *b, u32 *c, u32 *d, u32 *round_key)

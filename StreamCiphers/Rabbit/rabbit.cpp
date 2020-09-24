@@ -20,7 +20,7 @@ void byte_swap(u8 *output, u8 *input, int size)
 }
 #endif
 
-void rabbit_key_setup(rabbit_state *cs, u32 key[4])
+void rabbit_key_setup(rabbit_state *cs, u8 key[16])
 {
 	cs->carry = 0;
 
@@ -102,7 +102,7 @@ void rabbit_key_setup(rabbit_state *cs, u32 key[4])
 // MASTER STATE. Thus, BEFORE calling rabbit_iv_setup, the
 // master state must be enacted. This can be achieved by storing the original
 // state from the key setup.
-void rabbit_iv_setup(rabbit_state *cs, u32 iv[2])
+void rabbit_iv_setup(rabbit_state *cs, u8 iv[8])
 {
 
 	// Set X variable to master state
@@ -115,15 +115,16 @@ void rabbit_iv_setup(rabbit_state *cs, u32 iv[2])
 	cs->X[6] = cs->MASTER_X[6];
 	cs->X[7] = cs->MASTER_X[7];
 
-	u16 *iv_shrt = (u16*)iv; 
-	cs->C[0] = cs->MASTER_C[0] ^ iv[0];
-	cs->C[1] = cs->MASTER_C[1] ^ ( (iv_shrt[3] << 16) | iv_shrt[1] );
-	cs->C[2] = cs->MASTER_C[2] ^ iv[1];
-	cs->C[3] = cs->MASTER_C[3] ^ ( (iv_shrt[2] << 16) | iv_shrt[0] );
-	cs->C[4] = cs->MASTER_C[4] ^ iv[0];
-	cs->C[5] = cs->MASTER_C[5] ^ ( (iv_shrt[3] << 16) | iv_shrt[1] );
-	cs->C[6] = cs->MASTER_C[6] ^ iv[1];
-	cs->C[7] = cs->MASTER_C[7] ^ ( (iv_shrt[2] << 16) | iv_shrt[0] );
+	u16 *iv_u16 = (u16*)iv; 
+	u32 *iv_u32 = (u32*)iv;
+	cs->C[0] = cs->MASTER_C[0] ^ iv_u32[0];
+	cs->C[1] = cs->MASTER_C[1] ^ ( (iv_u16[3] << 16) | iv_u16[1] );
+	cs->C[2] = cs->MASTER_C[2] ^ iv_u32[1];
+	cs->C[3] = cs->MASTER_C[3] ^ ( (iv_u16[2] << 16) | iv_u16[0] );
+	cs->C[4] = cs->MASTER_C[4] ^ iv_u32[0];
+	cs->C[5] = cs->MASTER_C[5] ^ ( (iv_u16[3] << 16) | iv_u16[1] );
+	cs->C[6] = cs->MASTER_C[6] ^ iv_u32[1];
+	cs->C[7] = cs->MASTER_C[7] ^ ( (iv_u16[2] << 16) | iv_u16[0] );
 
 	for (int i = 0; i < 4; i++)
 	{

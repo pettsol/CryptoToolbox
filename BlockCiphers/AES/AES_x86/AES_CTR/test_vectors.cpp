@@ -101,7 +101,7 @@ int main()
 	std::cout << "\n\n ***** TEST VECTOR 1 ***** \n";
 
 	u8 tmp_1[16];
-	aes_ctr_initialize(&e_cs, key_1, (u32*)iv_1);
+	aes_ctr_initialize(&e_cs, key_1, iv_1);
 	aes_ctr_process_packet(&e_cs, tmp_1, test_vector_1, 16);
 	char hex_tmp_1[33];
 	hex_encode(hex_tmp_1, tmp_1, 16);
@@ -121,7 +121,7 @@ int main()
 	std::cout << "\n\n ***** TEST VECTOR 2 ***** \n";
 
 	u8 tmp_2[32];
-	aes_ctr_initialize(&e_cs, key_2, (u32*)iv_2);
+	aes_ctr_initialize(&e_cs, key_2, iv_2);
 	aes_ctr_process_packet(&e_cs, tmp_2, test_vector_2, 32);
 	char hex_tmp_2[65];
 	hex_encode(hex_tmp_2, tmp_2, 32);
@@ -140,7 +140,7 @@ int main()
 	std::cout << "\n\n ***** TEST VECTOR 3 *****\n";
 
 	u8 tmp_3[36];
-	aes_ctr_initialize(&e_cs, key_3, (u32*)iv_3);
+	aes_ctr_initialize(&e_cs, key_3, iv_3);
 	aes_ctr_process_packet(&e_cs, tmp_3, test_vector_3, 36);
 	char hex_tmp_3[73];
 	hex_encode(hex_tmp_3, tmp_3, 36);

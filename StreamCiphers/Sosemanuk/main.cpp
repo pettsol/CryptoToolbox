@@ -40,7 +40,7 @@ int main()
 
 	std::cout << "Loading iv\n";
 	// Load iv
-	sosemanuk_load_iv(&e_cs, (u32*)iv);
+	sosemanuk_load_iv(&e_cs, iv);
 
 	u8 cipher[plain.size()];
 
@@ -56,7 +56,7 @@ int main()
 	// Decryption
 	sosemanuk_state d_cs;
 	sosemanuk_load_key(&d_cs, key, keyString.size()/2);
-	sosemanuk_load_iv(&d_cs, (u32*)iv);
+	sosemanuk_load_iv(&d_cs, iv);
 
 	u8 recovered[plain.size()];
 
