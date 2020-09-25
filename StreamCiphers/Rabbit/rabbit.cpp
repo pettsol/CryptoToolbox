@@ -20,7 +20,7 @@ void byte_swap(u8 *output, u8 *input, int size)
 }
 #endif
 
-void rabbit_key_setup(rabbit_state *cs, u8 key[16])
+void rabbit_load_key(rabbit_state *cs, u8 key[16])
 {
 	cs->carry = 0;
 
@@ -102,7 +102,7 @@ void rabbit_key_setup(rabbit_state *cs, u8 key[16])
 // MASTER STATE. Thus, BEFORE calling rabbit_iv_setup, the
 // master state must be enacted. This can be achieved by storing the original
 // state from the key setup.
-void rabbit_iv_setup(rabbit_state *cs, u8 iv[8])
+void rabbit_load_iv(rabbit_state *cs, u8 iv[8])
 {
 
 	// Set X variable to master state

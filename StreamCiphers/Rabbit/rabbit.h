@@ -69,8 +69,8 @@ inline u32 g(u32 u, u32 v)
 	return (LSW ^ MSW);
 }
 
-void rabbit_key_setup(rabbit_state *cs, u8 key[16]);
-void rabbit_iv_setup(rabbit_state *cs, u8 iv[8]);
+void rabbit_load_key(rabbit_state *cs, u8 key[16]);
+void rabbit_load_iv(rabbit_state *cs, u8 iv[8]);
 void rabbit_extract_keystream(rabbit_state *cs, u32 *keystream);
 void rabbit_process_packet(rabbit_state *cs, u8 *output, u8 *input, u64);
 #ifdef DEBUG

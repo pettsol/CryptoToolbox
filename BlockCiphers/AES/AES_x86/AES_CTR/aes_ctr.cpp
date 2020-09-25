@@ -62,22 +62,30 @@ void aes_key_expansion(u8 key[], u32 key_schedule[])
 	}
 }
 
-void aes_load_iv(aes_state *cs, u32 *iv)
+void aes_load_iv(aes_state *cs, u8 iv[12])
 {
+	u32 *w_ptr = (u32*)iv;
+
 	// Load IV - 96 bits
-	cs->reg1 = *iv; iv++;
-	cs->reg2 = *iv; iv++;
-	cs->reg3 = *iv; iv++;
+	cs->reg1 = *w_ptr; w_ptr++;
+	cs->reg2 = *w_ptr; w_ptr++;
+	cs->reg3 = *w_ptr; w_ptr++;
 	// Set CTR to 1
 	u8 ctr[4] = {0x00, 0x00, 0x00, 0x01};
 	std::memcpy(&cs->reg4, ctr, 4);
 }
 
+void aes_load_key(aes_state *cs, u8 key[16])
+{
+	aes_key_expansion(key, cs->rk);
+}
+/*
 void aes_ctr_initialize(aes_state *cs, u8 key[16], u8 iv[12])
 {
 	aes_key_expansion(key, cs->rk);
 	aes_load_iv(cs, (u32*)iv);
 }
+*/
 
 void aes_encrypt(aes_state *cs, u32 keystream[])
 {
@@ -152,8 +160,9 @@ void state_update(aes_state *cs)
 		   (((tmp) << 24) & 0xff000000);
 }
 
-void aes_ctr_process_packet(aes_state *cs, u8 *out, u8 *in, int size)
+void aes_ctr_process_packet(aes_state *cs, u8 *out, u8 *in, u8 iv[12], int size)
 {
+	aes_load_iv(cs, iv);
 	
 	u32 *w_ptr_in = (u32*)in;;
 	u32 *w_ptr_out = (u32*)out;
