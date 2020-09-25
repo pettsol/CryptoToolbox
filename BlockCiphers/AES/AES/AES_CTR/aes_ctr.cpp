@@ -32,7 +32,7 @@ u32 SubByte(u32 word)
 	return ret;
 }
 
-void KeyExpansion(u8 key[], u32 key_schedule[])
+void aes_key_expansion(u8 key[], u32 key_schedule[])
 {
 	u32 temp;
 	int i = 0;
@@ -70,7 +70,7 @@ void aes_load_iv(aes_state *cs, u32 *iv)
 
 void aes_ctr_initialize(aes_state *cs, u8 key[16], u8 iv[16])
 {
-	KeyExpansion(key, cs->rk);
+	aes_key_expansion(key, cs->rk);
 	aes_load_iv(cs, (u32*)iv);
 }
 

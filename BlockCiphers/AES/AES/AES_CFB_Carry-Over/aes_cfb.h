@@ -42,7 +42,7 @@ void aes_cfb_process_packet(aes_state *cs, u8 *out, u8 *in, int size, int mode);
 // implementation with official
 // test vectors.
 void aes_encrypt(aes_state *cs, u32 keystream[]);
-void KeyExpansion(u8 key[], u32 key_schedule[]);
+void aes_key_expansion(u8 key[], u32 key_schedule[]);
 
 inline void initial_round(u32 *a, u32 *b,  u32 *c, u32 *d, u32 *round_key)
 {
