@@ -29,9 +29,9 @@ struct aes_state{
 // cipher initialization
 // and process packet.
 //void aes_ctr_initialize(aes_state *cs, u8 key[16], u8 iv[12]);
-//void aes_load_iv(aes_state *cs, u8 iv[12]);
+void aes_load_iv(aes_state *cs, u8 iv[12]);
 void aes_load_key(aes_state *cs, u8 key[16]);
-void aes_ctr_process_packet(aes_state *cs, u8 *out, u8 *in, u8 iv[12], int size);
+void aes_ctr_process_packet(aes_state *cs, u8 *out, u8 *in, int size);
 
 // the encryption mode of the cipher 
 // and the key expansion can be accessed

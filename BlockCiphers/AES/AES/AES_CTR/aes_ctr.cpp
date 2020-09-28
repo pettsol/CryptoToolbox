@@ -124,9 +124,8 @@ void state_update(aes_state *cs)
 		   (((tmp) << 24) & 0xff000000);
 }
 
-void aes_ctr_process_packet(aes_state *cs, u8 *out, u8 *in, u8 iv[12], int size)
+void aes_ctr_process_packet(aes_state *cs, u8 *out, u8 *in, int size)
 {
-	aes_load_iv(cs, iv);
 
 	u32 *w_ptr_in = (u32*)in;;
 	u32 *w_ptr_out = (u32*)out;
