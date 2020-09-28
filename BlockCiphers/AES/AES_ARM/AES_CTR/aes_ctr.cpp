@@ -63,9 +63,9 @@ void aes_key_expansion(u8 key[], u32 key_schedule[])
 	}
 }
 
-void aes_load_iv(aes_state *cs, u8 iv[12])
+void aes_load_iv(aes_state *cs, u8 nonce[12])
 {
-	u32 *w_ptr = (u32*)iv;
+	u32 *w_ptr = (u32*)nonce;
 	// Load IV - 96 bits
 	cs->reg1 = *w_ptr; w_ptr++;
 	cs->reg2 = *w_ptr; w_ptr++;

@@ -46,13 +46,13 @@ int main()
 	// This implementation
 	// operates on 4 byte
 	// words.
-	u8 iv_1[12] = {0x00, 0x00, 0x00, 0x30, 0x00, 0x00,
+	u8 nonce_1[12] = {0x00, 0x00, 0x00, 0x30, 0x00, 0x00,
              	       0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-	u8 iv_2[12] = {0x00, 0x6C, 0xB6, 0xDB, 0xC0, 0x54,
+	u8 nonce_2[12] = {0x00, 0x6C, 0xB6, 0xDB, 0xC0, 0x54,
 	       	       0x3B, 0x59, 0xDA, 0x48, 0xD9, 0x0B};
 
-	u8 iv_3[12] = {0x00, 0xE0, 0x01, 0x7B, 0x27, 0x77,
+	u8 nonce_3[12] = {0x00, 0xE0, 0x01, 0x7B, 0x27, 0x77,
 		       0x7F, 0x3F, 0x4A, 0x17, 0x86, 0xF0};
 	
 	u8 test_vector_1[16] = {0x53, 0x69, 0x6E, 0x67, 0x6C, 0x65, 0x20, 0x62,
@@ -103,7 +103,7 @@ int main()
 	u8 tmp_1[16];
 	//aes_ctr_initialize(&e_cs, key_1, iv_1);
 	aes_load_key(&e_cs, key_1);
-	aes_load_iv(&e_cs, iv_1);
+	aes_load_iv(&e_cs, nonce_1);
 	aes_ctr_process_packet(&e_cs, tmp_1, test_vector_1, 16);
 	char hex_tmp_1[33];
 	hex_encode(hex_tmp_1, tmp_1, 16);
@@ -125,7 +125,7 @@ int main()
 	u8 tmp_2[32];
 	//aes_ctr_initialize(&e_cs, key_2, iv_2);
 	aes_load_key(&e_cs, key_2);
-	aes_load_iv(&e_cs, iv_2);
+	aes_load_iv(&e_cs, nonce_2);
 	aes_ctr_process_packet(&e_cs, tmp_2, test_vector_2, 32);
 	char hex_tmp_2[65];
 	hex_encode(hex_tmp_2, tmp_2, 32);
@@ -146,7 +146,7 @@ int main()
 	u8 tmp_3[36];
 	//aes_ctr_initialize(&e_cs, key_3, iv_3);
 	aes_load_key(&e_cs, key_3);
-	aes_load_iv(&e_cs, iv_3);
+	aes_load_iv(&e_cs, nonce_3);
 	aes_ctr_process_packet(&e_cs, tmp_3, test_vector_3, 36);
 	char hex_tmp_3[73];
 	hex_encode(hex_tmp_3, tmp_3, 36);
