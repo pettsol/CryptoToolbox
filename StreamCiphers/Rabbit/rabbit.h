@@ -72,7 +72,7 @@ inline u32 g(u32 u, u32 v)
 void rabbit_load_key(rabbit_state *cs, u8 key[16]);
 void rabbit_load_iv(rabbit_state *cs, u8 iv[8]);
 void rabbit_extract_keystream(rabbit_state *cs, u32 *keystream);
-void rabbit_process_packet(rabbit_state *cs, u8 *output, u8 *input, u64);
+void rabbit_process_packet(rabbit_state *cs, u8 *output, u8 *input, u64 size);
 #ifdef DEBUG
 void byte_swap(u8 *out, u8 *in, int size);
 void print_key(u32 key[4]);
