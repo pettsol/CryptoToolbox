@@ -2,7 +2,7 @@
 
 This is an implementation of the AEGIS authenticated
 encryption algorithm. This particular variant uses
-the ARM AES operations.
+the x86 AES operations.
 
 Run the test_vectors program to verify that the
 algorithm produce the expected results on your
