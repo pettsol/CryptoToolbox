@@ -1,7 +1,7 @@
 #ifndef SOSEMANUK_H
 #define SOSEMANUK_H
 
-#include "../../BlockCiphers/Serpent/serpent.h"
+#include "serpent.h"
 #include "sosemanuk_tables.h"
 
 #define M 0x54655307

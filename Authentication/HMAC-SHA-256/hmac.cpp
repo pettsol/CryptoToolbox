@@ -10,8 +10,7 @@
 
 
 #include "hmac.h"
-#include "../../Hash/SHA/SHA-2/SHA-256/sha-256.h"
-#include "../../Encoders/Hex/encoder.h"
+#include "sha-256.h"
 #include <cstring>
 #include <iostream>
 

@@ -8,7 +8,7 @@ security.
 
 Compile with g++ using the following command:
 
-g++ main.cpp hmac.cpp ../../Hash/SHA/SHA-2/SHA-256/sha-256.cpp ../../Encoders/Hex/encoder.cpp -o main
+g++ main.cpp hmac.cpp sha-256.cpp ../../Encoders/Hex/encoder.cpp -o main
 
 
 Petter Solnoer - 15/04/2020

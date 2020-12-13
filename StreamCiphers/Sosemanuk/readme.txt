@@ -15,7 +15,7 @@ should be used with caution.
 
 Compile sample program using g++ with:
 
-g++ main.cpp sosemanuk.cpp ../../Encoders/Hex/encoder.cpp ../../BlockCiphers/Serpent/serpent.cpp -o main
+g++ main.cpp sosemanuk.cpp ../../Encoders/Hex/encoder.cpp serpent.cpp -o main
 
 
 Placed in the public domain by:

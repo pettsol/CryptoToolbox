@@ -9,7 +9,6 @@
 #include <cmath>
 
 #include "aegis_128.h"
-#include "../../../Encoders/Hex/encoder.h"
 
 void always_memset(void *dest, int ch, size_t count)
 {
