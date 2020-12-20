@@ -12,11 +12,11 @@
 #include <iostream>
 
 // Each message must be padded to be a multiple of 512 bits
-void pad_message(u8 *message, u64 size)
+void pad_message(uint8_t *message, uint64_t size)
 {
 	message += size;
 
-	u8 one = 1;
+	uint8_t one = 1;
 
 	// Append a 1 bit followed by zeros.
 	// Because we operate on BYTES, a 1
@@ -32,19 +32,19 @@ void pad_message(u8 *message, u64 size)
 	}
 	// Append the size in bitlength. Note that again
 	// we must transform to little-endian format!
-	u64 bit_length = 8*size;
-	u8 *tmp = (u8*) message;
-	*tmp = (u8)(bit_length >> 56); tmp++;
-	*tmp = (u8)(bit_length >> 48); tmp++;
-	*tmp = (u8)(bit_length >> 40); tmp++;
-	*tmp = (u8)(bit_length >> 32); tmp++;
-	*tmp = (u8)(bit_length >> 24); tmp++;
-	*tmp = (u8)(bit_length >> 16); tmp++;
-	*tmp = (u8)(bit_length >> 8); tmp++;
-	*tmp = (u8)(bit_length);
+	uint64_t bit_length = 8*size;
+	uint8_t *tmp = (uint8_t*) message;
+	*tmp = (uint8_t)(bit_length >> 56); tmp++;
+	*tmp = (uint8_t)(bit_length >> 48); tmp++;
+	*tmp = (uint8_t)(bit_length >> 40); tmp++;
+	*tmp = (uint8_t)(bit_length >> 32); tmp++;
+	*tmp = (uint8_t)(bit_length >> 24); tmp++;
+	*tmp = (uint8_t)(bit_length >> 16); tmp++;
+	*tmp = (uint8_t)(bit_length >> 8); tmp++;
+	*tmp = (uint8_t)(bit_length);
 }
 
-void sha256_process_message(u8 *digest, u8 *message, u64 size)
+void sha256_process_message(uint8_t *digest, uint8_t *message, uint64_t size)
 {
 	int n = 0;
 	// Declare message to hold padded text
@@ -54,7 +54,7 @@ void sha256_process_message(u8 *digest, u8 *message, u64 size)
 	} else {
 		n = (size/64)*64 + 64;
 	}
-	u32 msg[n/4];
+	uint32_t msg[n/4];
 
 	// Compute the number of 512 bit blocks
 	int N = n / 64;
@@ -62,7 +62,7 @@ void sha256_process_message(u8 *digest, u8 *message, u64 size)
 	std::memcpy(msg, message, size);
 	// Pad message to full 512 bit blocks
 	
-	pad_message( (u8*)msg, size );
+	pad_message( (uint8_t*)msg, size );
 
 	// State to hold message schedule
 	// and working variables
@@ -75,9 +75,9 @@ void sha256_process_message(u8 *digest, u8 *message, u64 size)
 	}
 
 	// Temporary variables T1, T2
-	u32 T1, T2;
+	uint32_t T1, T2;
 
-	u8* byte_ptr = (u8*)msg;
+	uint8_t* byte_ptr = (uint8_t*)msg;
 	// Iterate through each 512-bit block
 	for ( int i = 1; i <= N; i++ )
 	{
@@ -133,7 +133,7 @@ void sha256_process_message(u8 *digest, u8 *message, u64 size)
 		ss.digest[7] = ss.working_variables[7] + ss.digest[7];
 	}
 	// Make sure output is little-endian
-	u32 *u32_digest = (u32*)digest;
+	uint32_t *u32_digest = (uint32_t*)digest;
 	for (int i = 0; i < 8; i++)
 	{
 		*u32_digest = ((ss.digest[i] << 24) & 0xff000000) |

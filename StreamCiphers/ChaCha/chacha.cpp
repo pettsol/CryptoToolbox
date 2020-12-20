@@ -4,7 +4,7 @@
 #include <cstring>
 #include <cmath>
 
-void test_q(u32 *input, u32 *output)
+void test_q(uint32_t *input, uint32_t *output)
 {
 	chacha_state ctx;
 
@@ -15,18 +15,18 @@ void test_q(u32 *input, u32 *output)
 	std::memcpy(output, ctx.state, 64);
 }
 
-void byte_swap(u8 *output, u8 *input, int size)
+void byte_swap(uint8_t *output, uint8_t *input, int size)
 {
 	for (int i = 0; i < size/4; i++)
 	{
-		u32 num = ((u32*)input)[i];
-		u32 swapped = ((num >> 24)&0xff) | ((num << 8)&0xff0000) |
+		uint32_t num = ((uint32_t*)input)[i];
+		uint32_t swapped = ((num >> 24)&0xff) | ((num << 8)&0xff0000) |
 			((num >> 8)&0xff00) | ((num << 24)&0xff000000);
-		((u32*)input)[i] = swapped;
+		((uint32_t*)input)[i] = swapped;
 	}
 }
 
-void chacha_initialize(chacha_state *cs, u8 key[32],  u8 nonce[12])
+void chacha_initialize(chacha_state *cs, uint8_t key[32],  uint8_t nonce[12])
 {
 	// Load constants into words 0-3
 	cs->state[0] = 0x61707865;
@@ -43,7 +43,7 @@ void chacha_initialize(chacha_state *cs, u8 key[32],  u8 nonce[12])
 	std::memcpy(&(cs->state[13]), nonce, 12);
 }
 
-void chacha_block(chacha_state *cs, u32 counter, u32 *keystream)
+void chacha_block(chacha_state *cs, uint32_t counter, uint32_t *keystream)
 {
 
 	cs->state[12] = counter;
@@ -74,16 +74,16 @@ void chacha_block(chacha_state *cs, u32 counter, u32 *keystream)
 		
 }
 
-void chacha_process_packet(chacha_state *cs, u8 *output, u8 *input, u64 size)
+void chacha_process_packet(chacha_state *cs, uint8_t *output, uint8_t *input, uint64_t size)
 {
 	// Generate sufficient keystream;
 	int n_words = std::ceil(double(size)/4);
 
 	int n_iterations = std::ceil(double(n_words)/16);
 
-	u32 *keystream = new u32[n_iterations*16];
+	uint32_t *keystream = new uint32_t[n_iterations*16];
 
-	u32 counter = 1;
+	uint32_t counter = 1;
 
 	for (int i = 0; i < n_iterations; i++)
 	{
@@ -92,8 +92,8 @@ void chacha_process_packet(chacha_state *cs, u8 *output, u8 *input, u64 size)
 	}
 
 	int n_bytes = size;
-	u32 *w_ptr_in = (u32*) input;
-	u32 *w_ptr_out = (u32*) output;
+	uint32_t *w_ptr_in = (uint32_t*) input;
+	uint32_t *w_ptr_out = (uint32_t*) output;
 	int ks_index = 0;
 	while (n_bytes > 3)
 	{
@@ -101,9 +101,9 @@ void chacha_process_packet(chacha_state *cs, u8 *output, u8 *input, u64 size)
 		w_ptr_in++; w_ptr_out++; ks_index++;
 		n_bytes -= 4;
 	}
-	input = (u8*) w_ptr_in;
-	output = (u8*) w_ptr_out;
-	u8 *byte_ks = (u8*)&keystream[ks_index]; 
+	input = (uint8_t*) w_ptr_in;
+	output = (uint8_t*) w_ptr_out;
+	uint8_t *byte_ks = (uint8_t*)&keystream[ks_index]; 
 	for (int i = 0; i < n_bytes; i++)
 	{
 		*output = *input ^ *byte_ks; byte_ks++;

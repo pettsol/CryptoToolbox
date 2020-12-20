@@ -34,15 +34,15 @@ B2C2D2E2F303132333435363738393A3B3C3D3E3F4041424344454647484\
 	std::string msg = "53616D706C65206D65737361676520666\
 F72206B65796C656E3D626C6F636B6C656E"; 
 
-	u8 message[msg.size()/2];
+	uint8_t message[msg.size()/2];
 	hex_decode(message, msg.data(), msg.size());
 
-	u8 key[keystring.size()/2];
+	uint8_t key[keystring.size()/2];
 	hex_decode(key, keystring.data(), keystring.size());
 
 	hmac_load_key(&hs, key, keystring.size()/2);
 
-	u8 tag[16];
+	uint8_t tag[16];
 
 	//tag_generation(&hs, (u8*)message.data(), tag, message.size());
 	hmac_tag_generation(&hs, tag, message, msg.size()/2, 16);
@@ -52,7 +52,7 @@ F72206B65796C656E3D626C6F636B6C656E";
 	std::string hex_string(hex_tag, 32);
 	std::cout << "Hex tag: " << hex_string << std::endl;
 
-	u8 expected_tag[16];
+	uint8_t expected_tag[16];
 	hex_decode(expected_tag, ExpectedTag.data(), 32);
 
 	if ( hmac_tag_validation(&hs, tag, message, msg.size()/2, 16))

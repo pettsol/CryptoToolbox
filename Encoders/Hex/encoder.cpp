@@ -11,7 +11,7 @@
 #include <iostream>
 #include <string>
 
-void hex_encode(char* output, const u8* input, int size)
+void hex_encode(char* output, const uint8_t* input, int size)
 {
 	int loop;
 	int i;
@@ -29,7 +29,7 @@ void hex_encode(char* output, const u8* input, int size)
 	output[i++] = '\0';
 }
 
-int hex_to_int(unsigned char c)
+int hex_to_int(uint8_t c)
 {
 	int first = c / 16 - 3;
 	int second = c % 16;
@@ -38,18 +38,18 @@ int hex_to_int(unsigned char c)
 	return result;
 }
 
-int hex_to_ascii(unsigned char c, unsigned char d)
+int hex_to_ascii(uint8_t c, uint8_t d)
 {
 	int high = hex_to_int(c)*16;
 	int low = hex_to_int(d);
 	return high+low;
 }
 
-void hex_decode(u8* output, const char* input, int size)
+void hex_decode(uint8_t* output, const char* input, int size)
 {
 	int loop = 0;
-	unsigned char buf = 0;
-	unsigned char tmp;
+	uint8_t buf = 0;
+	uint8_t tmp;
 	for(int i = 0; i < size; i++)
 	{
 		if(i % 2 != 0)

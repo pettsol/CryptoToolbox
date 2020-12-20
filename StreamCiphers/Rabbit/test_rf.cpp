@@ -14,12 +14,12 @@ int main()
 //	std::string key_string = "912813292E3D36FE3BFC62F1DC51C3AC";
 	std::string iv_string = "0000000000000000";
 
-	u8 key[key_string.size()/2];
-	u8 iv[iv_string.size()/2];
+	uint8_t key[key_string.size()/2];
+	uint8_t iv[iv_string.size()/2];
 
 	hex_decode(key, key_string.data(), key_string.size());
 
-	print_key((u32*)key);
+	print_key((uint32_t*)key);
 
 	std::cout << " Hello " << std::endl;
 	// Swap bytes
@@ -32,9 +32,9 @@ int main()
 	rabbit_load_key(&cs, key);
 //	rabbit_load_iv(&cs, iv);
 //
-//	u8 keystream[16];
+//	uint8_t keystream[16];
 //
-//	rabbit_extract_keystream(&cs, (u32*)keystream);
+//	rabbit_extract_keystream(&cs, (uint32_t*)keystream);
 //
 //	char keystream_hex[33];
 //

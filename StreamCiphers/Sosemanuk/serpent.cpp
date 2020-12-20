@@ -7,9 +7,9 @@
 #define SOSEMANUK_H
 
 #ifdef SOSEMANUK_H
-void serpent1(u32 *r0, u32 *r1, u32 *r2, u32 *r3)
+void serpent1(uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3)
 {
-	u32 *r4 = new u32;
+	uint32_t *r4 = new uint32_t;
 	// Apply S2
 	S2(r0, r1, r2, r3, r4);
 
@@ -24,13 +24,13 @@ void serpent1(u32 *r0, u32 *r1, u32 *r2, u32 *r3)
 #endif
 
 #ifdef SOSEMANUK_H
-void rounds(serpent_state *ctx, u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *output_buffer)
+void rounds(serpent_state *ctx, uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3, uint32_t *output_buffer)
 #else
-void rounds(serpent_state *ctx, u32 *r0, u32 *r1, u32 *r2, u32 *r3)
+void rounds(serpent_state *ctx, uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3)
 #endif
 {
 	// A fifth working register is needed
-	u32 *r4 = new u32;;
+	uint32_t *r4 = new uint32_t;;
 
 	// Rounds
 	/* 0 */ ARK(ctx, r0, r1, r2, r3, 0); S0(r0, r1, r2, r3, r4); LT(r1, r4, r2, r0);
@@ -97,10 +97,10 @@ void rounds(serpent_state *ctx, u32 *r0, u32 *r1, u32 *r2, u32 *r3)
 	delete r4;
 
 }
-void serpent_process_packet(serpent_state *ctx, u32 *out, u32 *in, u64 size)
+void serpent_process_packet(serpent_state *ctx, uint32_t *out, uint32_t *in, uint64_t size)
 {
-	u64 org_size = size;
-	u32 tmp[4];
+	uint64_t org_size = size;
+	uint32_t tmp[4];
 	std::memcpy(tmp, in, size);
 	for ( int i = 0; i < size; i += 16 )
 	{
@@ -115,13 +115,13 @@ void serpent_process_packet(serpent_state *ctx, u32 *out, u32 *in, u64 size)
 	}
 }
 
-void serpent_key_schedule(serpent_state *ctx, u8 *input_key, int size)
+void serpent_key_schedule(serpent_state *ctx, uint8_t *input_key, int size)
 {
 	// The key_size must be 0 <= key_s <= 32
 	// If the key is larger, exit.
 	if ( size > 32 ) exit(1);
 
-	u8 key[32];
+	uint8_t key[32];
 	// If the key is shorter, pad with a
 	// 1-bit followed by 0-bits until the key
 	// is 256 bits / 32 bytes long.
@@ -139,23 +139,23 @@ void serpent_key_schedule(serpent_state *ctx, u8 *input_key, int size)
 		}
 	}
 
-	u32 w[4*N_ROUNDS];
+	uint32_t w[4*N_ROUNDS];
 
-	w[0] = ROTL_32( (( (u32*)key)[0] ^ ((u32*)key)[3] ^ 
-		((u32*)key)[5] ^ ((u32*)key)[7] ^ phi ^ 0), 11);
-	w[1] = ROTL_32( (( (u32*)key)[1] ^ ((u32*)key)[4] ^ 
-		((u32*)key)[6] ^ w[0] ^ phi ^ 1), 11);
-	w[2] = ROTL_32( (( (u32*)key)[2] ^ ((u32*)key)[5] ^ 
-		((u32*)key)[7] ^ w[1] ^ phi ^ 2), 11);
-	w[3] = ROTL_32( (( (u32*)key)[3] ^ ((u32*)key)[6] ^ 
+	w[0] = ROTL_32( (( (uint32_t*)key)[0] ^ ((uint32_t*)key)[3] ^ 
+		((uint32_t*)key)[5] ^ ((uint32_t*)key)[7] ^ phi ^ 0), 11);
+	w[1] = ROTL_32( (( (uint32_t*)key)[1] ^ ((uint32_t*)key)[4] ^ 
+		((uint32_t*)key)[6] ^ w[0] ^ phi ^ 1), 11);
+	w[2] = ROTL_32( (( (uint32_t*)key)[2] ^ ((uint32_t*)key)[5] ^ 
+		((uint32_t*)key)[7] ^ w[1] ^ phi ^ 2), 11);
+	w[3] = ROTL_32( (( (uint32_t*)key)[3] ^ ((uint32_t*)key)[6] ^ 
 		w[0] ^ w[2] ^ phi ^ 3), 11);
-	w[4] = ROTL_32( (( (u32*)key)[4] ^ ((u32*)key)[7] ^ 
+	w[4] = ROTL_32( (( (uint32_t*)key)[4] ^ ((uint32_t*)key)[7] ^ 
 		w[1] ^ w[3] ^ phi ^ 4), 11);
-	w[5] = ROTL_32( (( (u32*)key)[5] ^ w[0] ^ 
+	w[5] = ROTL_32( (( (uint32_t*)key)[5] ^ w[0] ^ 
 		w[2] ^ w[4] ^ phi ^ 5), 11);
-	w[6] = ROTL_32( (( (u32*)key)[6] ^ w[1] ^ 
+	w[6] = ROTL_32( (( (uint32_t*)key)[6] ^ w[1] ^ 
 		w[3] ^ w[5] ^ phi ^ 6), 11);
-	w[7] = ROTL_32( (( (u32*)key)[7] ^ w[2] ^ 
+	w[7] = ROTL_32( (( (uint32_t*)key)[7] ^ w[2] ^ 
 		w[4] ^ w[6] ^ phi ^ 7), 11);
 
 	for ( int i = 8; i < 4*N_ROUNDS; i++ )
@@ -171,10 +171,10 @@ void serpent_key_schedule(serpent_state *ctx, u8 *input_key, int size)
 		char wv2[9];
 		char wv3[9];
 
-		string2hexString(wv0, (u8*)(w + 4*i), 4);
-		string2hexString(wv1, (u8*)(w+4*i+1), 4);
-		string2hexString(wv2, (u8*)(w+4*i+2), 4);
-		string2hexString(wv3, (u8*)(w+4*i+3), 4);
+		string2hexString(wv0, (uint8_t*)(w + 4*i), 4);
+		string2hexString(wv1, (uint8_t*)(w+4*i+1), 4);
+		string2hexString(wv2, (uint8_t*)(w+4*i+2), 4);
+		string2hexString(wv3, (uint8_t*)(w+4*i+3), 4);
 
 		std::string wv0_string(wv0, 8);
 		std::string wv1_string(wv1, 8);
@@ -187,7 +187,7 @@ void serpent_key_schedule(serpent_state *ctx, u8 *input_key, int size)
 	//
 */
 	// Fifth register to assist with Sbox computations
-	u32 *r4 = new u32;
+	uint32_t *r4 = new uint32_t;
 	// k0, k1, k2, k3
 	S3(w, w+1, w+2, w+3, r4);
 	ctx->RK[0] = *(w+1);
@@ -407,10 +407,10 @@ wrapUp:
 		char hexRK1[9];
 		char hexRK2[9];
 		char hexRK3[9];
-		string2hexString(hexRK0, (u8*)&ctx->RK[4*i], 4);
-		string2hexString(hexRK1, (u8*)&ctx->RK[4*i+1], 4);
-		string2hexString(hexRK2, (u8*)&ctx->RK[4*i+2], 4);
-		string2hexString(hexRK3, (u8*)&ctx->RK[4*i+3], 4);
+		string2hexString(hexRK0, (uint8_t*)&ctx->RK[4*i], 4);
+		string2hexString(hexRK1, (uint8_t*)&ctx->RK[4*i+1], 4);
+		string2hexString(hexRK2, (uint8_t*)&ctx->RK[4*i+2], 4);
+		string2hexString(hexRK3, (uint8_t*)&ctx->RK[4*i+3], 4);
 
 		std::string hexRK0String(hexRK0, 8);
 		std::string hexRK1String(hexRK1, 8);

@@ -19,83 +19,83 @@
 // AEGIS state consist of 80 bytes, held in 16-byte (128 bit)
 // sequences. There is also a 16-byte temp variable w.
 struct aegis_state{
-	u32 key[4];
+	uint32_t key[4];
 
-	u32 s0[4];
-	u32 s1[4];
-	u32 s2[4];
-	u32 s3[4];
-	u32 s4[4];
-	u32 w[4];
+	uint32_t s0[4];
+	uint32_t s1[4];
+	uint32_t s2[4];
+	uint32_t s3[4];
+	uint32_t s4[4];
+	uint32_t w[4];
 };
 
-void aegis_load_key(aegis_state *cs, u8 key[16]);
-void aegis_encrypt_packet(aegis_state *cs, u8 *ct, u8 tag[16], u8 *pt, u8 *ad, u8 iv[16], u64 adlen, u64 msglen);
-int aegis_decrypt_packet(aegis_state *cs, u8 *pt, u8 *ct, u8 *ad, u8 iv[16], u8 tag[16], u64 adlen, u64 msglen);
+void aegis_load_key(aegis_state *cs, uint8_t key[16]);
+void aegis_encrypt_packet(aegis_state *cs, uint8_t *ct, uint8_t tag[16], uint8_t *pt, uint8_t *ad, uint8_t iv[16], uint64_t adlen, uint64_t msglen);
+int aegis_decrypt_packet(aegis_state *cs, uint8_t *pt, uint8_t *ct, uint8_t *ad, uint8_t iv[16], uint8_t tag[16], uint64_t adlen, uint64_t msglen);
 
 // The AES round function is used five times in AEGIS-128
-inline void round(u32 *a, u32 *b, u32 *c, u32 *d, u32 *round_key)
+inline void round(uint32_t *a, uint32_t *b, uint32_t *c, uint32_t *d, uint32_t *round_key)
 {
 	// Copies needed to hold variables
 	// during operations
-	u32 tmp_a = *a;
-	u32 tmp_b = *b;
-	u32 tmp_c = *c;
-	u32 tmp_d = *d;
+	uint32_t tmp_a = *a;
+	uint32_t tmp_b = *b;
+	uint32_t tmp_c = *c;
+	uint32_t tmp_d = *d;
 
-	u8 tmp;
+	uint8_t tmp;
 	// Each table T yields 32 bits output
-	tmp = (u8) tmp_a;
+	tmp = (uint8_t) tmp_a;
 	*a = T0[tmp];
-	tmp = (u8) (tmp_b >> 8);
+	tmp = (uint8_t) (tmp_b >> 8);
 	*a = (*a) ^ T1[tmp];
-	tmp = (u8) (tmp_c >> 16);
+	tmp = (uint8_t) (tmp_c >> 16);
 	*a = (*a) ^ T2[tmp];
-	tmp = (u8) (tmp_d >> 24);
+	tmp = (uint8_t) (tmp_d >> 24);
 	*a = (*a) ^ T3[tmp];
 	*a = (*a) ^ (*round_key); round_key++;
 
 	// The second output word of 32 bits
-	tmp = (u8) tmp_b;
+	tmp = (uint8_t) tmp_b;
 	*b = T0[tmp];
-	tmp = (u8) (tmp_c >> 8);
+	tmp = (uint8_t) (tmp_c >> 8);
 	*b = (*b) ^ T1[tmp];
-	tmp = (u8) (tmp_d >> 16);
+	tmp = (uint8_t) (tmp_d >> 16);
 	*b = (*b) ^ T2[tmp];
-	tmp = (u8) (tmp_a >> 24);
+	tmp = (uint8_t) (tmp_a >> 24);
 	*b = (*b) ^ T3[tmp];
 	*b = (*b) ^ (*round_key); round_key++;
 
 	// The third output word of 32 bits
-	tmp = (u8) tmp_c;
+	tmp = (uint8_t) tmp_c;
 	*c = T0[tmp];
-	tmp = (u8) (tmp_d >> 8);
+	tmp = (uint8_t) (tmp_d >> 8);
 	*c = (*c) ^ T1[tmp];
-	tmp = (u8) (tmp_a >> 16);
+	tmp = (uint8_t) (tmp_a >> 16);
 	*c = (*c) ^ T2[tmp];
-	tmp = (u8) (tmp_b >> 24);
+	tmp = (uint8_t) (tmp_b >> 24);
 	*c = (*c) ^ T3[tmp];
 	*c = (*c) ^ (*round_key); round_key++;
 
 	// The fourth word of 32 bits
-	tmp = (u8) tmp_d;
+	tmp = (uint8_t) tmp_d;
 	*d = T0[tmp];
-	tmp = (u8) (tmp_a >> 8);
+	tmp = (uint8_t) (tmp_a >> 8);
 	*d = (*d) ^ T1[tmp];
-	tmp = (u8) (tmp_b >> 16);
+	tmp = (uint8_t) (tmp_b >> 16);
 	*d = (*d) ^ T2[tmp];
-	tmp = (u8) (tmp_c >> 24);
+	tmp = (uint8_t) (tmp_c >> 24);
 	*d = (*d) ^ T3[tmp];
 	*d = (*d) ^ (*round_key);
 }
 
 // State update function
-inline void aegis_state_update(aegis_state *cs, u32 *message_block)
+inline void aegis_state_update(aegis_state *cs, uint32_t *message_block)
 {
 
-	u32 tmp[4];
-	u32 tmp_key[4];
-	u32 tmp_state[4];
+	uint32_t tmp[4];
+	uint32_t tmp_key[4];
+	uint32_t tmp_state[4];
 
 
 	// UPDATE FIRST REGISTER //

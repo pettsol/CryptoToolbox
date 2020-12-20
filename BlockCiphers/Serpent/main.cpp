@@ -12,24 +12,24 @@ int main()
 
 	std::cout << "Key length: " << keyString.size() << std::endl;
 	
-	u8 key[32];
+	uint8_t key[32];
 	hex_decode(key, keyString.data(), keyString.size());
 
 	// Hex test vector plaintext
 	std::string plainString = "11010101010101010101010101010101";
 	
-	u8 plain[16];
+	uint8_t plain[16];
 	hex_decode(plain, plainString.data(), plainString.size());
 
 	serpent_state e_cs; std::memset(&e_cs, 0, sizeof(e_cs));
 
 	serpent_key_schedule(&e_cs, key, 32);
 #ifdef SOSEMANUK_H
-	u8 cipher[48];
+	uint8_t cipher[48];
 #else
-	u8 cipher[16];
+	uint8_t cipher[16];
 #endif
-	serpent_process_packet(&e_cs, (u32*)cipher, (u32*)plain, 16);
+	serpent_process_packet(&e_cs, (uint32_t*)cipher, (uint32_t*)plain, 16);
 
 #ifdef SOSEMANUK_H
 	char hexCt[97];

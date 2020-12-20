@@ -1,28 +1,8 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-#include <climits>
+#include <stdint.h>
 #include <fstream>
-
-// Check that the size of
-// data types are as 
-// expected
-
-#if (UCHAR_MAX != 0xFFU)
-#error UCHAR IS NOT 8 BITS
-#endif
-
-#if (USHRT_MAX != 0xFFFFU)
-#error USHORT IS NOT 16 BITS
-#endif
-
-#if (UINT_MAX != 0xFFFFFFFFU)
-#error UINT IS NOT 32 BITS
-#endif
-
-#if (ULLONG_MAX != 0xFFFFFFFFFFFFFFFFU)
-#error ULONGLONG IS NOT 64 BITS
-#endif
 
 // The following is required to force inline on compilers
 
@@ -43,16 +23,7 @@
 #define BITMASK1 0x36363636
 #define BITMASK2 0x5c5c5c5c
 
-// We can now typedef variables of fixed sizes
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
-
-
-
-static const unsigned char Sbox[256] = {		
+static const uint8_t Sbox[256] = {		
 	0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,
 	0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
 	0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0,
@@ -87,7 +58,7 @@ static const unsigned char Sbox[256] = {
 	0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
 };
 
-static const unsigned int T0[256] = {
+static const uint32_t T0[256] = {
 0xa56363c6, 0x847c7cf8, 0x997777ee, 0x8d7b7bf6,
 0xdf2f2ff,  0xbd6b6bd6, 0xb16f6fde, 0x54c5c591,
 0x50303060, 0x3010102,  0xa96767ce, 0x7d2b2b56,
@@ -155,7 +126,7 @@ static const unsigned int T0[256] = {
 };
 
 	
-static const unsigned int T1[256] = {
+static const uint32_t T1[256] = {
 0x6363c6a5, 0x7c7cf884, 0x7777ee99, 0x7b7bf68d,
 0xf2f2ff0d, 0x6b6bd6bd, 0x6f6fdeb1, 0xc5c59154,
 0x30306050, 0x1010203,  0x6767cea9, 0x2b2b567d,
@@ -222,7 +193,7 @@ static const unsigned int T1[256] = {
 0xb0b07bcb, 0x5454a8fc, 0xbbbb6dd6, 0x16162c3a
 };
 
-static const unsigned int T2[256] = {
+static const uint32_t T2[256] = {
 0x63c6a563, 0x7cf8847c, 0x77ee9977, 0x7bf68d7b,
 0xf2ff0df2, 0x6bd6bd6b, 0x6fdeb16f, 0xc59154c5,
 0x30605030, 0x1020301,  0x67cea967, 0x2b567d2b,
@@ -288,7 +259,7 @@ static const unsigned int T2[256] = {
 0x4182c341, 0x9929b099, 0x2d5a772d, 0xf1e110f,
 0xb07bcbb0, 0x54a8fc54, 0xbb6dd6bb, 0x162c3a16};
 
-static const unsigned int T3[256] = { 
+static const uint32_t T3[256] = { 
 0xc6a56363, 0xf8847c7c, 0xee997777, 0xf68d7b7b,
 0xff0df2f2, 0xd6bd6b6b, 0xdeb16f6f, 0x9154c5c5,
 0x60503030, 0x2030101,  0xcea96767, 0x567d2b2b,
@@ -355,7 +326,7 @@ static const unsigned int T3[256] = {
 0x7bcbb0b0, 0xa8fc5454, 0x6dd6bbbb, 0x2c3a1616
 };
 
-static const unsigned char Rcon[31] =
+static const uint32_t Rcon[31] =
 {
 	0x0, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 
 	0x40, 0x80, 0x1b, 0x36, 0x6c, 0xc0, 

@@ -12,8 +12,8 @@ int main()
 
 	std::string iv_string = "597E26C175F573C3";
 
-	u8 key[key_string.size()/2];
-	u8 iv[iv_string.size()/2];
+	uint8_t key[key_string.size()/2];
+	uint8_t iv[iv_string.size()/2];
 
 	hex_decode(key, key_string.data(), key_string.size());
 	hex_decode(iv, iv_string.data(), iv_string.size());
@@ -25,25 +25,25 @@ int main()
 
 	std::string plaintext = "Hello World! This is the Rabbit cipher designed by Cryptico A/S. It was submitted to the eSTREAM portfolio, and was a successful entrant. This implementation was written by Petter Solnoer and has been verified by official test vectors....";
 
-	u8 ct[plaintext.size()];
+	uint8_t ct[plaintext.size()];
 
-	rabbit_process_packet(&cs, ct, (u8*)plaintext.data(), plaintext.size());
+	rabbit_process_packet(&cs, ct, (uint8_t*)plaintext.data(), plaintext.size());
 
 	// Encrypt more shit that won't be decipered.
 	
 	std::string mumbo = "..2.2.2.2.2.2.2.2.222..2.2.2.2.2.2.2.2.2..2.2.2.2.222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222";
 
-	u8 ct_throw[mumbo.size()];
+	uint8_t ct_throw[mumbo.size()];
 
-	rabbit_process_packet(&cs, ct_throw, (u8*)mumbo.data(), mumbo.size());
+	rabbit_process_packet(&cs, ct_throw, (uint8_t*)mumbo.data(), mumbo.size());
 
 	rabbit_load_iv(&cs, iv);
 
 	std::string second_pt = "Does this decrypt successfully?";
 
-	u8 second_ct[second_pt.size()];
+	uint8_t second_ct[second_pt.size()];
 
-	rabbit_process_packet(&cs, second_ct, (u8*)second_pt.data(), second_pt.size());
+	rabbit_process_packet(&cs, second_ct, (uint8_t*)second_pt.data(), second_pt.size());
 
 	char ct_hex[2*plaintext.size()+1];
 
@@ -58,7 +58,7 @@ int main()
 	rabbit_load_key(&d_cs, key);
 	rabbit_load_iv(&d_cs, iv);
 
-	u8 recv[plaintext.size()];
+	uint8_t recv[plaintext.size()];
 
 	rabbit_process_packet(&d_cs, recv, ct, plaintext.size());
 
@@ -68,7 +68,7 @@ int main()
 
 	rabbit_load_iv(&d_cs, iv);
 
-	u8 recv2[second_pt.size()];
+	uint8_t recv2[second_pt.size()];
 
 	rabbit_process_packet(&d_cs, recv2, second_ct, second_pt.size());
 
@@ -76,9 +76,9 @@ int main()
 
 	std::cout << "Recovered 2: " << recovered_2 << std::endl;
 
-//	u8 keystream[16];
+//	uint8_t keystream[16];
 
-//	rabbit_extract_keystream(&cs, (u32*)keystream);
+//	rabbit_extract_keystream(&cs, (uint32_t*)keystream);
 
 //	char keystream_hex[33];
 

@@ -23,12 +23,12 @@
 int main()
 {
 	// 16 byte = 128 bit keys.
-	u8 key[BLOCKSIZE] = {0};
+	uint8_t key[BLOCKSIZE] = {0};
 
 	// This implementation
 	// operates on 4 byte
 	// words.
-	u8 iv[BLOCKSIZE] = {0};
+	uint8_t iv[BLOCKSIZE] = {0};
 	
 	// *ENCRYPTION* //
 
@@ -59,7 +59,7 @@ the implementation is to be used............This is an even longer message blabl
 	std::cout << "Plaintext: " << plaintext << std::endl;
 	// Declare a variable that
 	// will hold the ciphertext
-	u8 ciphertext[plaintext.size()];
+	uint8_t ciphertext[plaintext.size()];
 
 	// The plaintext is then
 	// encrypted. Pass a reference
@@ -69,7 +69,7 @@ the implementation is to be used............This is an even longer message blabl
 	// of the plaintext is also required.
 	// State that the input is to
 	// be encrypted.
-	aes_cfb_process_packet(&e_cs, ciphertext, (u8*)plaintext.data(), plaintext.size(), ENCRYPT);
+	aes_cfb_process_packet(&e_cs, ciphertext, (uint8_t*)plaintext.data(), plaintext.size(), ENCRYPT);
 
 	// Print the corresponding
 	// ciphertext:
@@ -87,10 +87,10 @@ the implementation is to be used............This is an even longer message blabl
 
 	// Declare a variable to
 	// hold the recovered text.
-	u8 recovered[ciphertext_string.size()];
+	uint8_t recovered[ciphertext_string.size()];
 
 	// Decrypt
-	aes_cfb_process_packet(&d_cs, recovered, (u8*)ciphertext_string.data(), ciphertext_string.size(), DECRYPT);
+	aes_cfb_process_packet(&d_cs, recovered, (uint8_t*)ciphertext_string.data(), ciphertext_string.size(), DECRYPT);
 
 	// Print the recovered text
 	std::string recovered_string((char*)recovered, ciphertext_string.size());

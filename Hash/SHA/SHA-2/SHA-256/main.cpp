@@ -27,14 +27,14 @@ int main()
 		msg += "a";
 	}
 
-	u8 digest[32] = {0};
+	uint8_t digest[32] = {0};
 
-	sha256_process_message(digest, (u8*)msg.data(), (u64)msg.size());
+	sha256_process_message(digest, (uint8_t*)msg.data(), (uint64_t)msg.size());
 
 	std::string dig((char*)digest, 32);
 
 	char hex_representation[64];
-	hex_encode(hex_representation, (const u8*)digest, 32);
+	hex_encode(hex_representation, (const uint8_t*)digest, 32);
 
 	std::string hex_rep(hex_representation, 64);
 

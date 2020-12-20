@@ -8,33 +8,8 @@
 #ifndef SHA_256_TABLES_H
 #define SHA_256_TABLES_H
 
-#include <climits>
+#include <stdint.h>
 #include <fstream>
-
-// Verify that the data types are as expected
-
-#if (UCHAR_MAX != 0xFFU)
-#error UCHAR IS NOT 8 BITS
-#endif
-
-#if (USHRT_MAX != 0xFFFFU)
-#error USHORT IS NOT 16 BITS
-#endif
-
-#if (UINT_MAX != 0xFFFFFFFFU)
-#error UINT IS NOT 32 BITS
-#endif
-
-#if (ULLONG_MAX != 0xFFFFFFFFFFFFFFFFU)
-#error ULONGLONG IS NOT 64 BITS
-#endif
-
-// Define sizes
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
 
 // Force inline on compilers
 #ifdef _MSC_VER
@@ -57,7 +32,7 @@ typedef unsigned long long u64;
 #define SHR(x,n) (x >> n)
 
 // Table with SHA-256 constants
-static const u32 K[64] = {
+static const uint32_t K[64] = {
 	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
 	0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
 	0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -78,7 +53,7 @@ static const u32 K[64] = {
 
 // The initial hash of SHA-256 consists of the following
 // 8 words.
-static const u32 H0[8] = {
+static const uint32_t H0[8] = {
 	0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
 	0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 };

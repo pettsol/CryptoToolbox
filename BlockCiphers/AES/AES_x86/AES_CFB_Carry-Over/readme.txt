@@ -19,8 +19,8 @@ of operation however, no attacks
 against the CFB mode with a predictable
 IV is known.
 
-THIS VARIANT IS DESIGNED FOR ARM-DEVICES. COMPILE
-WITH -D ARM_INTRINSICS SET. If not, the cipher
+THIS VARIANT IS DESIGNED FOR x86-DEVICES. COMPILE
+WITH -D x86_INTRINSICS SET. If not, the cipher
 reverts to a table-driven variant.
 
 Compilation:

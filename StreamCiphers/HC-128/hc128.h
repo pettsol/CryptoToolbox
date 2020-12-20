@@ -10,33 +10,8 @@
 #ifndef HC_128_H
 #define HC_128_H
 
-#include <climits>
+#include <stdint.h>
 #include <fstream>
-
-// Verify that the data types are as expected
-
-#if (UCHAR_MAX != 0xFFU)
-#error UCHAR IS NOT 8 BITS
-#endif
-
-#if (USHRT_MAX != 0xFFFFU)
-#error USHORT IS NOT 16 BITS
-#endif
-
-#if (UINT_MAX != 0xFFFFFFFFU)
-#error UINT IS NOT 32 BITS
-#endif
-
-#if (ULLONG_MAX != 0xFFFFFFFFFFFFFFFFU)
-#error ULONGLONG IS NOT 64 BITS
-#endif
-
-// Define sizes
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
 
 // Force inline on compilers
 #ifdef _MSC_VER
@@ -60,44 +35,44 @@ typedef unsigned long long u64;
 #define HC128_IV_SIZE 16
 
 struct hc128_state{
-	u32 P[512];
-	u32 Q[512];
+	uint32_t P[512];
+	uint32_t Q[512];
 };
 
-void hc128_initialize(hc128_state *cs, u8 key[16], u8 iv[16]);
-void hc128_generate_keystream(hc128_state, u32 *keystream, u64 size);
-void hc128_process_packet(hc128_state *cs, u8 *output, u8 *input, u64 size);
+void hc128_initialize(hc128_state *cs, uint8_t key[16], uint8_t iv[16]);
+void hc128_generate_keystream(hc128_state, uint32_t *keystream, uint64_t size);
+void hc128_process_packet(hc128_state *cs, uint8_t *output, uint8_t *input, uint64_t size);
 
-inline u32 f1(u32 x)
+inline uint32_t f1(uint32_t x)
 {
 	return ( ROTR_32(x,7) ^ ROTR_32(x,18) ^ (x >> 3) );
 }
 
-inline u32 f2(u32 x)
+inline uint32_t f2(uint32_t x)
 {
 	return ( ROTR_32(x,17) ^ ROTR_32(x,19) ^ (x >> 10) );
 }
 
-inline u32 g1(u32 x, u32 y, u32 z)
+inline uint32_t g1(uint32_t x, uint32_t y, uint32_t z)
 {
 	return ( ( ROTR_32(x,10) ^ ROTR_32(z,23) ) + ROTR_32(y,8) );
 }
 
-inline u32 g2(u32 x, u32 y, u32 z)
+inline uint32_t g2(uint32_t x, uint32_t y, uint32_t z)
 {
 	return ( ( ROTL_32(x,10) ^ ROTL_32(z,23) ) + ROTL_32(y,8) );
 }
 
-inline u32 h1(hc128_state *cs, u32 x)
+inline uint32_t h1(hc128_state *cs, uint32_t x)
 {
 	// Do something with Q
-	return ( cs->Q[(u8)x] + cs->Q[(256 + ((u8)(x >> 16) ))]  );
+	return ( cs->Q[(uint8_t)x] + cs->Q[(256 + ((uint8_t)(x >> 16) ))]  );
 }
 
-inline u32 h2(hc128_state *cs, u32 x)
+inline uint32_t h2(hc128_state *cs, uint32_t x)
 {
 	// Do something with P
-	return ( cs->P[(u8)x] + cs->P[(256 + ((u8)(x >> 16) ))]  );
+	return ( cs->P[(uint8_t)x] + cs->P[(256 + ((uint8_t)(x >> 16) ))]  );
 }
 
 #endif

@@ -15,10 +15,10 @@ int main()
 	std::string key_string = "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F";
 	std::string nonce_string = "000000000000004A00000000";
 
-	u8 key[32];
-	u8 nonce[12];
+	uint8_t key[32];
+	uint8_t nonce[12];
 
-	// Convert hex key and nonce to u8
+	// Convert hex key and nonce to uint8_t
 	hex_decode(key, key_string.data(), key_string.size());
 	hex_decode(nonce, nonce_string.data(), nonce_string.size());
 
@@ -27,10 +27,10 @@ int main()
 	chacha_initialize(&e_cs, key, nonce);
 
 	// Declare array to hold ciphertext
-	u8 ciphertext[message.size()];
+	uint8_t ciphertext[message.size()];
 
 	// Encrypt
-	chacha_process_packet(&e_cs, ciphertext, (u8*)message.data(), message.size());
+	chacha_process_packet(&e_cs, ciphertext, (uint8_t*)message.data(), message.size());
 
 	// Print the hex encoding of the ciphertext
 	char hex_ciphertext[2*message.size()+1];
@@ -45,7 +45,7 @@ int main()
 	chacha_initialize(&d_cs, key, nonce);
 
 	// Declare array to hold recovered message
-	u8 recovered[message.size()];
+	uint8_t recovered[message.size()];
 
 	// Decrypt
 	chacha_process_packet(&d_cs, recovered, ciphertext, message.size());

@@ -1,6 +1,8 @@
 #ifndef SOSEMANUK_TABLES_H
 #define SOSEMANUK_TABLES_H
 
+#include <stdint.h>
+
 // Sosemanuk involve multiplication with alpha and alpha inverse.
 // These multiplications can, according to the specification
 // be implemented by combining a shift and exclusive-or
@@ -9,7 +11,7 @@
 // as 256-element LUTs, where the elements are computed according
 // to the cipher specification.
 
-static const unsigned int alpha[256] = {
+static const uint32_t alpha[256] = {
 	0x00000000, 0xE19FCF13, 0x6B973726, 0x8A08F835,
 	0xD6876E4C, 0x3718A15F, 0xBD10596A, 0x5C8F9679,
 	0x05A7DC98, 0xE438138B, 0x6E30EBBE, 0x8FAF24AD,
@@ -76,7 +78,7 @@ static const unsigned int alpha[256] = {
 	0xB55B4DDE, 0x54C482CD, 0xDECC7AF8, 0x3F53B5EB
 };
 
-static const unsigned int inv_alpha[256] = {
+static const uint32_t inv_alpha[256] = {
 	0x00000000, 0x180F40CD, 0x301E8033, 0x2811C0FE,
 	0x603CA966, 0x7833E9AB, 0x50222955, 0x482D6998,
 	0xC078FBCC, 0xD877BB01, 0xF0667BFF, 0xE8693B32,
@@ -142,5 +144,4 @@ static const unsigned int inv_alpha[256] = {
 	0xFEDECC7A, 0xE6D18CB7, 0xCEC04C49, 0xD6CF0C84,
 	0x9EE2651C, 0x86ED25D1, 0xAEFCE52F, 0xB6F3A5E2
 };
-
 #endif

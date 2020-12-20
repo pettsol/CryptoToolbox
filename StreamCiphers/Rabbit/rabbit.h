@@ -1,32 +1,8 @@
 #ifndef RABBIT_H
 #define RABBIT_H
 
-#include <climits>
+#include <stdint.h>
 #include <iostream>
-
-
-// Check the sizes
-#if (UCHAR_MAX != 0xFFU)
-#error UCHAR IS NOT 8 BITS
-#endif
-
-#if (USHRT_MAX != 0xFFFFU)
-#error USHRT IS NOT 16 BITS
-#endif
-
-#if (UINT_MAX != 0xFFFFFFFFU)
-#error UINT IS NOT 32 BITS
-#endif
-
-#if (ULLONG_MAX != 0xFFFFFFFFFFFFFFFFU)
-#error ULONGLONG IS NOT 64 BITS
-#endif
-
-// define sizes
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
 
 // Force inline
 #ifdef _MSC_VER
@@ -48,48 +24,48 @@ typedef unsigned long long u64;
 
 #define WORDSIZE 0x100000000
 
-static const u32 A[8] = {
+static const uint32_t A[8] = {
 	0x4d34d34d, 0xd34d34d3, 0x34d34d34, 0x4d34d34d,
 	0xd34d34d3, 0x34d34d34, 0x4d34d34d, 0xd34d34d3
 };
 
 struct rabbit_state{
-	u32 MASTER_X[8];
-	u32 MASTER_C[8];
-	u32 X[8];
-	u32 C[8];
-	u8 carry;
+	uint32_t MASTER_X[8];
+	uint32_t MASTER_C[8];
+	uint32_t X[8];
+	uint32_t C[8];
+	uint8_t carry;
 };
 
-inline u32 g(u32 u, u32 v)
+inline uint32_t g(uint32_t u, uint32_t v)
 {
-	u64 hold = ((u+v) % WORDSIZE) * ((u+v) % WORDSIZE);
-	u32 LSW = hold & 0xffffffff;
-	u32 MSW = (hold >> 32) & 0xffffffff;
+	uint64_t hold = ((u+v) % WORDSIZE) * ((u+v) % WORDSIZE);
+	uint32_t LSW = hold & 0xffffffff;
+	uint32_t MSW = (hold >> 32) & 0xffffffff;
 	return (LSW ^ MSW);
 }
 
-void rabbit_load_key(rabbit_state *cs, u8 key[16]);
-void rabbit_load_iv(rabbit_state *cs, u8 iv[8]);
-void rabbit_extract_keystream(rabbit_state *cs, u32 *keystream);
-void rabbit_process_packet(rabbit_state *cs, u8 *output, u8 *input, u64 size);
+void rabbit_load_key(rabbit_state *cs, uint8_t key[16]);
+void rabbit_load_iv(rabbit_state *cs, uint8_t iv[8]);
+void rabbit_extract_keystream(rabbit_state *cs, uint32_t *keystream);
+void rabbit_process_packet(rabbit_state *cs, uint8_t *output, uint8_t *input, uint64_t size);
 #ifdef DEBUG
-void byte_swap(u8 *out, u8 *in, int size);
-void print_key(u32 key[4]);
+void byte_swap(uint8_t *out, uint8_t *in, int size);
+void print_key(uint32_t key[4]);
 void print_inner_state(rabbit_state *cs);
 #endif
 
 inline void rabbit_counter(rabbit_state *cs)
 {
-	u64 temp;
+	uint64_t temp;
 	for (int j = 0; j < 8; j++)
 	{
-		temp = (u64)cs->C[j] + (u64)A[j] + (u64)cs->carry;
+		temp = (uint64_t)cs->C[j] + (uint64_t)A[j] + (uint64_t)cs->carry;
 		cs->carry = temp > WORDSIZE;
 #ifdef DEBUG
 		std::cout << "Wordsize: " << WORDSIZE << std::endl;
 
-		std::cout << "Temp = " << temp << " | carry = " << (u32)cs->carry << std::endl;
+		std::cout << "Temp = " << temp << " | carry = " << (uint32_t)cs->carry << std::endl;
 #endif
 		cs->C[j] = (temp % WORDSIZE);
 	}
@@ -97,7 +73,7 @@ inline void rabbit_counter(rabbit_state *cs)
 
 inline void rabbit_next_state(rabbit_state *cs)
 {
-	u32 G[8];
+	uint32_t G[8];
 	
 	for (int j = 0; j < 8; j++)
 	{

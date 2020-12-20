@@ -2,8 +2,8 @@
 #define SERPENT_H
 
 #include <iostream>
-#include <climits>
 #include <fstream>
+#include <stdint.h>
 
 #define SOSEMANUK_H
 
@@ -14,26 +14,6 @@
 #endif
 
 #define ROTL_32(x, n) ( ((x) << (n)) | ((x) >> (32-n)) )
-
-// Check that the size of
-// data types are as 
-// expected
-
-#if (UCHAR_MAX != 0xFFU)
-#error UCHAR IS NOT 8 BITS
-#endif
-
-#if (USHRT_MAX != 0xFFFFU)
-#error USHORT IS NOT 16 BITS
-#endif
-
-#if (UINT_MAX != 0xFFFFFFFFU)
-#error UINT IS NOT 32 BITS
-#endif
-
-#if (ULLONG_MAX != 0xFFFFFFFFFFFFFFFFU)
-#error ULONGLONG IS NOT 64 BITS
-#endif
 
 // The following is required to force inline on compilers
 
@@ -51,23 +31,16 @@
 	#define forceinline inline
 #endif
 
-// We can now typedef variables of fixed sizes
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
-
 struct serpent_state{
-	u32 RK[4*N_ROUNDS];
+	uint32_t RK[4*N_ROUNDS];
 };
 
-void serpent_key_schedule(serpent_state *ctx, u8 *key, int size);
-void serpent_process_packet(serpent_state *ctx, u32 *out, u32 *in, u64 size);
+void serpent_key_schedule(serpent_state *ctx, uint8_t *key, int size);
+void serpent_process_packet(serpent_state *ctx, uint32_t *out, uint32_t *in, uint64_t size);
 #ifdef SOSEMANUK_H
-void serpent1(u32 *r0, u32 *r1, u32 *r2, u32 *r3);
+void serpent1(uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3);
 #endif
-inline void S0(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
+inline void S0(uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3, uint32_t *r4)
 {
 	*r3 ^= *r0; *r4 = *r1;
         *r1 &= *r3; *r4 ^= *r2;
@@ -82,7 +55,7 @@ inline void S0(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
 	// Output should be r1 || r4 || r2 || r0
 }
 
-inline void S1(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
+inline void S1(uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3, uint32_t *r4)
 {
         *r0 = ~(*r0); *r2 = ~(*r2);
         *r4 = *r0; *r0 &= *r1;
@@ -98,7 +71,7 @@ inline void S1(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
 
 }
 
-inline void S2(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
+inline void S2(uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3, uint32_t *r4)
 {
         *r4 = *r0; *r0 &= *r2;
         *r0 ^= *r3; *r2 ^= *r1;
@@ -113,7 +86,7 @@ inline void S2(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
 
 }
 
-inline void S3(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
+inline void S3(uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3, uint32_t *r4)
 {
         *r4 = *r0; *r0 |= *r3;
         *r3 ^= *r1; *r1 &= *r4;
@@ -130,7 +103,7 @@ inline void S3(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
 
 }
 
-inline void S4(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
+inline void S4(uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3, uint32_t *r4)
 {
         *r1 ^= *r3; *r3 = ~(*r3);
         *r2 ^= *r3; *r3 ^= *r0;
@@ -145,7 +118,7 @@ inline void S4(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
 
 }
 
-inline void S5(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
+inline void S5(uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3, uint32_t *r4)
 {
 	*r0 ^= *r1; *r1 ^= *r3;
 	*r3 = ~(*r3); *r4 = *r1;
@@ -162,7 +135,7 @@ inline void S5(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
 
 }
 
-inline void S6(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
+inline void S6(uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3, uint32_t *r4)
 {
 	*r2 = ~(*r2); *r4 = *r3;
 	*r3 &= *r0; *r0 ^= *r4;
@@ -175,7 +148,7 @@ inline void S6(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
 	*r2 &= *r4; *r2 ^= *r3;
 }
 
-inline void S7(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
+inline void S7(uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3, uint32_t *r4)
 {
 	*r4 = *r1; *r1 |= *r2;
 	*r1 ^= *r3; *r4 ^= *r2;
@@ -189,7 +162,7 @@ inline void S7(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
 	*r2 |= *r0; *r4 ^= *r2;
 }
 
-inline void LT(u32 *r0, u32 *r1, u32 *r2, u32 *r3)
+inline void LT(uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3)
 {
 	*r0 = ROTL_32(*r0, 13);
 	*r2 = ROTL_32(*r2, 3);
@@ -203,7 +176,7 @@ inline void LT(u32 *r0, u32 *r1, u32 *r2, u32 *r3)
 	*r2 = ROTL_32(*r2, 22);
 }
 
-inline void ARK(serpent_state *ctx, u32 *r0, u32 *r1, u32 *r2, u32 *r3, int N)
+inline void ARK(serpent_state *ctx, uint32_t *r0, uint32_t *r1, uint32_t *r2, uint32_t *r3, int N)
 {
 	// RK's are held in a one dimensional array.
 	*r0 = (*r0) ^ (ctx->RK[4*N]);

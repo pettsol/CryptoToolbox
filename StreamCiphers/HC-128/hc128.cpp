@@ -11,18 +11,18 @@
 #include <iostream>
 #include <cstring>
 
-void hc128_initialize(hc128_state *cs, u8 key[16], u8 iv[16])
+void hc128_initialize(hc128_state *cs, uint8_t key[16], uint8_t iv[16])
 {
 	// The initialization of HC128 maps the key and IV to an initial state
 	// held in the P and Q tables.
-	u32 W[1280];
+	uint32_t W[1280];
 
 	// Stage 1: Expand key and IV into array W
 	std::memcpy(W, key, 16); std::memcpy(&(W[4]), key, 16);
 	std::memcpy(&(W[8]), iv, 16); std::memcpy(&(W[12]), iv, 16);
 
 //	char hexKey[33];
-//	string2hexString(hexKey, (u8*)key, 16);
+//	string2hexString(hexKey, (uint8_t*)key, 16);
 //	std::string printKey(hexKey, 32);
 
 	for (int i = 16; i < 1280; i++)
@@ -61,7 +61,7 @@ void hc128_initialize(hc128_state *cs, u8 key[16], u8 iv[16])
 
 }
 
-void hc128_generate_keystream(hc128_state *cs, u32 *keystream, u64 size)
+void hc128_generate_keystream(hc128_state *cs, uint32_t *keystream, uint64_t size)
 {
 	// Generate keystream
 	for (int i = 0; i <= (size-1)/4; i++)
@@ -86,13 +86,13 @@ void hc128_generate_keystream(hc128_state *cs, u32 *keystream, u64 size)
 	}
 }
 
-void hc128_process_packet(hc128_state *cs, u8 *output, u8 *input, u64 size)
+void hc128_process_packet(hc128_state *cs, uint8_t *output, uint8_t *input, uint64_t size)
 {
 	// Assert that message size is strictly greater than zero
 	if ( size < 1 ) return;
 		
 
-	u32 keystream[(size-1)/4 +1];
+	uint32_t keystream[(size-1)/4 +1];
 
 	// Generate enough keystream
 	hc128_generate_keystream(cs, keystream, size);
@@ -102,11 +102,11 @@ void hc128_process_packet(hc128_state *cs, u8 *output, u8 *input, u64 size)
 	while ( size > 3 )
 	{
 		// Mix keystream and input to get output
-		*((u32*)output) = *((u32*)input) ^ keystream[counter++];
+		*((uint32_t*)output) = *((uint32_t*)input) ^ keystream[counter++];
 		size -= 4; output += 4; input += 4; 
 	}
 	// Process the final < 4 bytes
-	u8 *byteptr = (u8*)&keystream[counter];
+	uint8_t *byteptr = (uint8_t*)&keystream[counter];
 	for ( ; size > 0; size-- )
 	{
 		// Mix keystream to the final bytes

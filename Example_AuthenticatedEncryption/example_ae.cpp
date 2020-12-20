@@ -2,7 +2,7 @@
 #include "../Authentication/HMAC-SHA-256/hmac.h"
 
 // Include the desired encryption algorithm
-#include "../BlockCiphers/AES/AES/AES_CFB_Carry-Over/aes_cfb.h"
+#include "../BlockCiphers/AES/AES/AES_CFB/aes_cfb.h"
 //#include "../StreamCiphers/Sosemanuk/sosemanuk.h"
 #include "../StreamCiphers/HC-128/hc128.h"
 
@@ -21,8 +21,8 @@ int main()
 	// Create encryption and authentication keys.
 	// They SHOULD be random, but for the purpose
 	// of an example, it is not important.
-	u8 a_key[HMAC_KEYLENGTH] = {0};
-	u8 e_key[AES_BLOCKSIZE] = {0};
+	uint8_t a_key[HMAC_KEYLENGTH] = {0};
+	uint8_t e_key[AES_BLOCKSIZE] = {0};
 
 	// Instantiate and initialize a HMAC struct
 	hmac_state a_cs;
@@ -32,7 +32,7 @@ int main()
 	aes_state e_cs;
 
 	// Load an all-zero IV to initialize the feedback register
-	u8 iv[AES_BLOCKSIZE] = {0};
+	uint8_t iv[AES_BLOCKSIZE] = {0};
 	aes_cfb_initialize(&e_cs, e_key, iv);
 
 	
@@ -58,10 +58,10 @@ int main()
 	// this buffer must also hold an IV.
 	//
 	// AES in CFB-mode with IV carry-over is self-synchronizing.
-	u8 msg[plaintext.size() + TAGSIZE];
+	uint8_t msg[plaintext.size() + TAGSIZE];
 
 	// The message will look like: ciphertext || tag
-	aes_cfb_process_packet(&e_cs, msg, (u8*)plaintext.data(), plaintext.size(), ENCRYPT);
+	aes_cfb_process_packet(&e_cs, msg, (uint8_t*)plaintext.data(), plaintext.size(), ENCRYPT);
 
 	// Compute the HMAC tag over the ciphertext and append:
 	hmac_tag_generation(&a_cs, &msg[plaintext.size()], msg, plaintext.size(), TAGSIZE);
@@ -89,7 +89,7 @@ int main()
 	// Else tag is valid, proceed to decrypt.
 	std::cout << "Valid tag\n";
 
-	u8 recovered[plaintext.size()];
+	uint8_t recovered[plaintext.size()];
 	aes_cfb_process_packet(&d_cs, recovered, msg, plaintext.size(), DECRYPT);
 
 	std::string recov((const char*)recovered, plaintext.size());
@@ -110,13 +110,13 @@ int main()
 	hc128_initialize(&e_cs2, e_key, iv);
 
 	// Declare a msg2 buffer to hold IV || Ciphertext || Tag
-	u8 msg2[HC128_IV_SIZE + plaintext2.size() + TAGSIZE];
+	uint8_t msg2[HC128_IV_SIZE + plaintext2.size() + TAGSIZE];
 
 	// Load the IV
 	std::memcpy(msg2, iv, HC128_IV_SIZE);
 
 	// Encrypt
-	hc128_process_packet(&e_cs2, &msg2[HC128_IV_SIZE], (u8*)plaintext2.data(), plaintext2.size());
+	hc128_process_packet(&e_cs2, &msg2[HC128_IV_SIZE], (uint8_t*)plaintext2.data(), plaintext2.size());
 
 	// Compute the tag and append. NB! Tag is computed over IV || Ciphertext!
 	hmac_tag_generation(&a_cs, &msg2[HC128_IV_SIZE+plaintext2.size()], msg2, HC128_IV_SIZE+plaintext2.size(), TAGSIZE);
@@ -142,7 +142,7 @@ int main()
 	hc128_initialize(&d_cs2, e_key, msg2);
 
 	// Decrypt. The ciphertext sits after the IV in msg2.
-	u8 recovered2[plaintext2.size()];
+	uint8_t recovered2[plaintext2.size()];
 	hc128_process_packet(&d_cs2, recovered2, &msg2[HC128_IV_SIZE], plaintext2.size());
 
 	// Print the recovered plaintext2:

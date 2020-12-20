@@ -9,11 +9,6 @@
 #define AES_CFB
 
 #include "tables.h"
-
-#if __ARM_NEON
-#include <arm_neon.h>
-#endif
-
 // define modes
 // for encryption
 // and decryption

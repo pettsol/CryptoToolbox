@@ -10,48 +10,48 @@
 
 #include "sha-256-tables.h"
 
-void pad_message(u8 *message, u64 size);
-void sha256_process_message(u8 *digest, u8 *message, u64 size);
+void pad_message(uint8_t *message, uint64_t size);
+void sha256_process_message(uint8_t *digest, uint8_t *message, uint64_t size);
 
 struct sha_256_state
 {
 	// Message schedule
-	u32 W[64];
+	uint32_t W[64];
 
 	// Working variables
 	// a = 0; b = 1; ... ; h = 7;.
-	u32 working_variables[8];
+	uint32_t working_variables[8];
 
 	// Holding the state of the hash
-	u32 digest[8];
+	uint32_t digest[8];
 };
 
-inline u32 ch(u32 x, u32 y, u32 z)
+inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z)
 {
 	return ( ((x) & (y)) ^ (~(x) & (z)) );
 }
 
-inline u32 maj(u32 x, u32 y, u32 z)
+inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z)
 {
 	return ( ( (x) & (y) ) ^ ( (x) & (z) ) ^ ( (y) & (z) ) );
 }
 
-inline u32 SIGMA_0(u32 x)
+inline uint32_t SIGMA_0(uint32_t x)
 {
 	return ( ROTR_32(x,2) ^ ROTR_32(x,13)  ^ ROTR_32(x,22) );
 }
 
-inline u32 SIGMA_1(u32 x)
+inline uint32_t SIGMA_1(uint32_t x)
 {
 	return ( ROTR_32(x,6) ^ ROTR_32(x,11) ^ ROTR_32(x,25) );
 }
 
-inline u32 sigma_0(u32 x)
+inline uint32_t sigma_0(uint32_t x)
 {
 	return ( ROTR_32(x,7) ^ ROTR_32(x,18) ^ SHR(x,3) ); 
 }
 
-inline u32 sigma_1(u32 x)
+inline uint32_t sigma_1(uint32_t x)
 {
 	return ( ROTR_32(x,17) ^ ROTR_32(x,19) ^ SHR(x,10) );
 }

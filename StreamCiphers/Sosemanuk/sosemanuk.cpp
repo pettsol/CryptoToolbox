@@ -2,20 +2,20 @@
 #include <iostream>
 
 
-void sosemanuk_load_key(sosemanuk_state *cs, u8 *key, int keysize)
+void sosemanuk_load_key(sosemanuk_state *cs, uint8_t *key, int keysize)
 {
 	// Find the 25 round keys that will be used
 	// in the IV injection.
 	serpent_key_schedule(&(cs->serpent_cs), key, keysize);
 }
 
-void sosemanuk_load_iv(sosemanuk_state *cs, u8 iv[16])
+void sosemanuk_load_iv(sosemanuk_state *cs, uint8_t iv[16])
 {
 	// Let the IV serve as input to the serpent cipher
 	// and store the output from the 12th, 18th and 24th
 	// round as the initial state of Sosemanuk.
-	u32 initial_state[12];
-	serpent_process_packet(&(cs->serpent_cs), initial_state, (u32*)iv, 16);
+	uint32_t initial_state[12];
+	serpent_process_packet(&(cs->serpent_cs), initial_state, (uint32_t*)iv, 16);
 
 	cs->s[9] = initial_state[0];
 	cs->s[8] = initial_state[1];
@@ -35,14 +35,14 @@ void sosemanuk_load_iv(sosemanuk_state *cs, u8 iv[16])
 	
 }
 
-void sosemanuk_process_packet(sosemanuk_state *cs, u8 *out, u8 *in, u64 size)
+void sosemanuk_process_packet(sosemanuk_state *cs, uint8_t *out, uint8_t *in, uint64_t size)
 {
 	// Get word ptrs
-	u32 *w_ptr_out = (u32*)out; u32 *w_ptr_in = (u32*)in;
+	uint32_t *w_ptr_out = (uint32_t*)out; uint32_t *w_ptr_in = (uint32_t*)in;
 
 	// We need buffers to work with
-	u32 f_buf[4];
-	u32 s_buf[4];
+	uint32_t f_buf[4];
+	uint32_t s_buf[4];
 	while (size >= 16)
 	{
 		// Perform full encryption
@@ -105,13 +105,13 @@ void sosemanuk_process_packet(sosemanuk_state *cs, u8 *out, u8 *in, u64 size)
 		w_ptr_out++; w_ptr_in++;
 		size -= 4;
 	}
-	out = (u8*) w_ptr_out;
-	in = (u8*) w_ptr_in;
+	out = (uint8_t*) w_ptr_out;
+	in = (uint8_t*) w_ptr_in;
 
 	for (int j = 0; j < size; j++)
 	{
 		// Get the final bytes
-		*out = *in ^ ((u8)(s_buf[i] >> (8*j)));
+		*out = *in ^ ((uint8_t)(s_buf[i] >> (8*j)));
 		out++; in++;
 	}
 }

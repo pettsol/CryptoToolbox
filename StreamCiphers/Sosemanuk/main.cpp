@@ -11,7 +11,7 @@ int main()
 
 	std::cout << "Key length: " << keyString.size() << std::endl;
 	
-	u8 key[keyString.size()/2];
+	uint8_t key[keyString.size()/2];
 	hex_decode(key, keyString.data(), keyString.size());
 
 	// Hex IV string
@@ -19,7 +19,7 @@ int main()
 
 	std::cout << "IV length: " << ivString.size() << std::endl;
 
-	u8 iv[ivString.size()/2];
+	uint8_t iv[ivString.size()/2];
 	hex_decode(iv, ivString.data(), ivString.size());
 
 	// Hex test vector plaintext
@@ -27,7 +27,7 @@ int main()
 	
 	std::string plain = "Sosemanuk stream cipher test";
 	std::cout << "Plaintext: " << plain << std::endl;
-	//u8 plain[plainString.size()/2];
+	//uint8_t plain[plainString.size()/2];
 	//hex2stringString(plain, plainString.data(), plainString.size());
 
 	std::cout << "Initializing cipher\n";
@@ -42,10 +42,10 @@ int main()
 	// Load iv
 	sosemanuk_load_iv(&e_cs, iv);
 
-	u8 cipher[plain.size()];
+	uint8_t cipher[plain.size()];
 
 	std::cout << "Processing packet\n";
-	sosemanuk_process_packet( &e_cs, cipher, (u8*)plain.data(), plain.size() );
+	sosemanuk_process_packet( &e_cs, cipher, (uint8_t*)plain.data(), plain.size() );
 
 	char hexCt[2*plain.size()+1];
 	hex_encode(hexCt, cipher, plain.size());
@@ -58,7 +58,7 @@ int main()
 	sosemanuk_load_key(&d_cs, key, keyString.size()/2);
 	sosemanuk_load_iv(&d_cs, iv);
 
-	u8 recovered[plain.size()];
+	uint8_t recovered[plain.size()];
 
 	sosemanuk_process_packet( &d_cs, recovered, cipher, plain.size() );
 

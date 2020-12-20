@@ -22,24 +22,24 @@ int main()
 
 	std::cout << "Plaintext: " << pt << std::endl;
 
-	u8 ciphertext[pt.size()];
-	u8 recovered[pt.size()];
+	uint8_t ciphertext[pt.size()];
+	uint8_t recovered[pt.size()];
 
 	std::string hexkey = "0F62B5085BAE0154A7FA4DA0F34699EC";
 	std::string hexIv = "288FF65DC42B92F960C72E95FC63CA31";
 
-	u8 key[16];
-	hex_decode((u8*)key, hexkey.data(), 32);
+	uint8_t key[16];
+	hex_decode((uint8_t*)key, hexkey.data(), 32);
 
-	u8 iv[16];
-	hex_decode((u8*)iv, hexIv.data(), 32);
+	uint8_t iv[16];
+	hex_decode((uint8_t*)iv, hexIv.data(), 32);
 
 	// This segment performs the encryption	
 	hc128_state e_cs;
 
 	hc128_initialize(&e_cs, key, iv);
 
-	hc128_process_packet(&e_cs, ciphertext, (u8*)pt.data(), pt.size());
+	hc128_process_packet(&e_cs, ciphertext, (uint8_t*)pt.data(), pt.size());
 
 	// This segment performs the decryption
 	hc128_state d_cs;

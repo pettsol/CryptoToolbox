@@ -16,12 +16,12 @@ int main()
 
 	std::cout << "\n\n************* TEST VECTOR 1 ************\n\n";
 
-	u8 key_1[16] = {0};
-	u8 iv_1[16] = {0};
-	u8 pt_1[16] = {0};
-	u8 ct_1[16] = {0};
-	u8 tag_1[16];
-	u8 recv_1[16];
+	uint8_t key_1[16] = {0};
+	uint8_t iv_1[16] = {0};
+	uint8_t pt_1[16] = {0};
+	uint8_t ct_1[16] = {0};
+	uint8_t tag_1[16];
+	uint8_t recv_1[16];
 
 	std::string expected_ct_1 = "951B050FA72B1A2FC16D2E1F01B07D7E";
 	std::string expected_tag_1 = "A7D2A99773249542F422217EE888D5F1";
@@ -87,13 +87,13 @@ int main()
 	
 	std::cout << "\n\n************* TEST VECTOR 2 ************\n\n";
 	
-	u8 key_2[16] = {0};
-	u8 iv_2[16] = {0};
-	u8 pt_2[16] = {0};
-	u8 ad_2[16] = {0};
-	u8 ct_2[16] = {0};
-	u8 tag_2[16];
-	u8 recv_2[16];
+	uint8_t key_2[16] = {0};
+	uint8_t iv_2[16] = {0};
+	uint8_t pt_2[16] = {0};
+	uint8_t ad_2[16] = {0};
+	uint8_t ct_2[16] = {0};
+	uint8_t tag_2[16];
+	uint8_t recv_2[16];
 
 	std::string expected_ct_2 = "10B0DEE65A97D751205C128A992473A1";
 	std::string expected_tag_2 = "46DCB9EE93C46CF13731D41B9646C131";
@@ -159,15 +159,15 @@ int main()
 	
 	std::cout << "\n\n************* TEST VECTOR 3 ************\n\n";
 	
-	u8 key_3[16] = {0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	uint8_t key_3[16] = {0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 		        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-	u8 iv_3[16] = {0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00,
+	uint8_t iv_3[16] = {0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00,
 		       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-	u8 pt_3[16] = {0};
-	u8 ad_3[4] = {0x00, 0x01, 0x02, 0x03};
-	u8 ct_3[16] = {0};
-	u8 tag_3[16];
-	u8 recv_3[16];
+	uint8_t pt_3[16] = {0};
+	uint8_t ad_3[4] = {0x00, 0x01, 0x02, 0x03};
+	uint8_t ct_3[16] = {0};
+	uint8_t tag_3[16];
+	uint8_t recv_3[16];
 
 	std::string expected_ct_3 = "2B78F5C1618DA39AFBB2920F5DAE02B0";
 	std::string expected_tag_3 = "74759CD0E19314650D6C635B563D80FD";
@@ -233,32 +233,32 @@ int main()
 
 	std::cout << "\n\n************* TEST VECTOR 4 ************\n\n";
 
-	u8 key_4[16] = {0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+	uint8_t key_4[16] = {0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 		      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-	u8 iv_4[16] = {0x10, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 
+	uint8_t iv_4[16] = {0x10, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 
 		     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-	u8 pt_4[32] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+	uint8_t pt_4[32] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 		     0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
 		     0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
 	             0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f};
 	
-	u8 ad_4[8] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
+	uint8_t ad_4[8] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
 
 	std::string expected_ct_4 = "E08EC10685D63C7364ECA78FF6E1A1DDFDFC15D5311A7F2988A0471A13973FD7";
 	std::string expected_tag_4 = "27E84B6C4CC46CB6ECE8F1F3E4AA0E78";
 
-	//u8 ad[16] = {0};
+	//uint8_t ad[16] = {0};
 	
-	u8 ct_4[32] = {0};
-	u8 tag_4[16] = {0};
+	uint8_t ct_4[32] = {0};
+	uint8_t tag_4[16] = {0};
 
 	aegis_state cs_4;
 	
 	aegis_load_key(&cs_4, key_4);
 	aegis_encrypt_packet(&cs_4, ct_4, tag_4, pt_4, ad_4, iv_4, 8, 32);
 
-	u8 recv_4[32] = {0};
+	uint8_t recv_4[32] = {0};
 
 	if (!aegis_decrypt_packet(&cs_4, recv_4, ct_4, ad_4, iv_4, tag_4, 8, 32))
 	{

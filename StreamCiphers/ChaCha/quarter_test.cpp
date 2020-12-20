@@ -8,23 +8,23 @@ int main()
 {
 
 	// ROTATION TEST
-	u32 test = 0x7998bfda;
+	uint32_t test = 0x7998bfda;
 	test = ROTL_32(test, 7);
 	std::cout << test << std::endl;
 	// STRING
 	//std::string HexIn = "7998BFDA";
 	std::string HexIn = "DABF9879";
 	//std::string HexIn = "BFDA7998";
-	u8 in[4];
+	uint8_t in[4];
        	hex_decode(in, HexIn.data(), 8);
 
-	u32 w_in[2];
+	uint32_t w_in[2];
 	std::memcpy(w_in, in, 4);
 
-	u32 in_rot = ROTL_32(w_in[0], 7);
+	uint32_t in_rot = ROTL_32(w_in[0], 7);
 
 	char HexOut[9];
-	hex_encode(HexOut, (u8*)&in_rot, 4);
+	hex_encode(HexOut, (uint8_t*)&in_rot, 4);
 
 	std::string printString(HexOut);
 	std::cout << "Rot: " << printString << std::endl;
@@ -37,14 +37,14 @@ int main()
 	std::cout << "Input: " << hexInput << std::endl;
 	std::cout << "Size of input: " << hexInput.size() << std::endl;
 
-	u8 input[hexInput.size()/2];
-	u8 output[hexInput.size()/2];
+	uint8_t input[hexInput.size()/2];
+	uint8_t output[hexInput.size()/2];
 	hex_decode(input, hexInput.data(), hexInput.size());
 	// Swap byte order of input
 	byte_swap(input, input, hexInput.size()/2);
 	
 	// Pass to test q
-	test_q((u32*)input, (u32*)output);
+	test_q((uint32_t*)input, (uint32_t*)output);
 
 	// Swap byte order of output
 	byte_swap(output, output, hexInput.size()/2);

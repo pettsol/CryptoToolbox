@@ -1,30 +1,7 @@
 #ifndef CHACHA_H
 #define CHACHA_H
 
-#include <climits>
-
-// Check the sizes
-#if (UCHAR_MAX != 0xFFU)
-#error UCHAR IS NOT 8 BITS
-#endif
-
-#if (USHRT_MAX != 0xFFFFU)
-#error USHRT IS NOT 16 BITS
-#endif
-
-#if (UINT_MAX != 0xFFFFFFFFU)
-#error UINT IS NOT 32 BITS
-#endif
-
-#if (ULLONG_MAX != 0xFFFFFFFFFFFFFFFFU)
-#error ULONGLONG IS NOT 64 BITS
-#endif
-
-// define sizes
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
+#include <stdint.h>
 
 // Force inline
 #ifdef _MSC_VER
@@ -45,14 +22,14 @@ typedef unsigned long long u64;
 #define ROTL_32(x,n) ROTR_32(x,(32-(n)))
 
 struct chacha_state{
-	u32 state[16];
+	uint32_t state[16];
 };
 
-void chacha_initialize(chacha_state *cs, u8 key[32], u8 nonce[12]);
-void chacha_block(chacha_state *cs, u32 counter, u32 *keystream);
-void chacha_process_packet(chacha_state *cs, u8 *output, u8 *input, u64 size);
-void test_q(u32 *input, u32 *output);
-void byte_swap(u8 *output, u8 *input, int size);
+void chacha_initialize(chacha_state *cs, uint8_t key[32], uint8_t nonce[12]);
+void chacha_block(chacha_state *cs, uint32_t counter, uint32_t *keystream);
+void chacha_process_packet(chacha_state *cs, uint8_t *output, uint8_t *input, uint64_t size);
+void test_q(uint32_t *input, uint32_t *output);
+void byte_swap(uint8_t *output, uint8_t *input, int size);
 
 inline void q_round(chacha_state *cs, int a, int b, int c, int d){
 	
