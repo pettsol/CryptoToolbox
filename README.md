@@ -13,16 +13,16 @@ Petter Solnør, (2020), “A Cryptographic Toolbox for Feedback Control Systems�
 
 bibtex entry:
 
-@article{MIC-2020-4-3,
-  title={{A Cryptographic Toolbox for Feedback Control Systems}},
-  author={Solnør, Petter},
-  journal={Modeling, Identification and Control},
-  volume={41},
-  number={4},
-  pages={313--332},
-  year={2020},
-  doi={10.4173/mic.2020.4.3},
-  publisher={Norwegian Society of Automatic Control}
+@article{MIC-2020-4-3,\
+  title={{A Cryptographic Toolbox for Feedback Control Systems}},\
+  author={Solnør, Petter},\
+  journal={Modeling, Identification and Control},\
+  volume={41},\
+  number={4},\
+  pages={313--332},\
+  year={2020},\
+  doi={10.4173/mic.2020.4.3},\
+  publisher={Norwegian Society of Automatic Control}\
 };
 
 All algorithms take a pointer to an input buffer
