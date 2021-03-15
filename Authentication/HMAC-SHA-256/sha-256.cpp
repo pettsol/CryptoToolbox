@@ -48,7 +48,7 @@ void sha256_process_message(uint8_t *digest, uint8_t *message, uint64_t size)
 {
 	int n = 0;
 	// Declare message to hold padded text
-	if ( (size + 1)%64 > 56 )
+	if ( (size)%64 >= 56 )
 	{
 		n = (size/64)*64 + 128;
 	} else {
